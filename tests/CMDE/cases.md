@@ -47,23 +47,25 @@ OrderService.pay():88 空指针，加 Optional
 
 ---
 
-### Case 3: 开放讨论/创意 (少见但锋利)
-**场景**: 架构讨论，其他人都在发散，CMDE 扔一个具体点子就闭嘴。
+<!-- revised in P0 fix: 原 "Cache 层换 Caffeine" 是硬凑的"创意讨论"场景，CMDE 是机枪手人格，没有脑暴肌肉。改成边界场景——看起来像随口一提（像 CMLE 的"咱俩聊聊"），但实际仍是 C+M+D+E 的临时祈使，测 LLM 能否守住边界 -->
+### Case 3: 边界场景 (临时想到的一句优化指令)
+**场景**: 走廊里碰到同事，脑子里闪过一个优化点，立刻下指令——不展开、不邀请讨论、不"咱俩一起"。
 **Prompt**:
 ```
-Cache 层换 Caffeine，替掉 Guava
+顺手把 OrderMapper 那个 count 查询加个 covering index
 ```
 **四维判定**:
-- A/C: **C** — 点名具体库（Caffeine / Guava），不泛谈"优化缓存"
-- M/V: **M** — 一句话提案，不写三页 RFC
-- D/L: **D** — "换"、"替掉"是祈使，不是"我觉得是否可以考虑"
-- X/E: **E** — 直接推方案，不开"大家怎么看"圆桌
+- A/C: **C** — 点名 `OrderMapper` + `count 查询` + `covering index`，坐标级具体
+- M/V: **M** — 一句话打完即走，不写背景也不讲收益
+- D/L: **D** — "加个"是祈使，没有"你觉得呢/咱俩看看"的协作口吻
+- X/E: **E** — 方案自己已经拍死（covering index），要的就是落地
 - **最终代码**: CMDE
 
-**为什么典型**:
-- CMDE 在创意场景很罕见，但一出手就是"库名 + 祈使动词"，像扔手雷。
-- vs CVDE："我们能不能讨论一下缓存层的技术选型，比如 Caffeine 相比 Guava 的 W-TinyLFU 算法在命中率上..." —— CVDE 展开，CMDE 扔一句就走。
-- vs AMDE："优化一下缓存" —— 无坐标，空话。
+**为什么典型（边界如何不破）**:
+- 表面像 CMLE 的"顺手"语气，但**缺了"咱俩/一起"**——CMLE 会说"咱俩看看 OrderMapper 那个 count 要不要加 covering index"，把决策权放一半给对方；CMDE 直接把方案定死。
+- vs CMDX："OrderMapper count 为啥不走 covering index？" —— CMDX 追问因由，CMDE 给结果。
+- vs AMDE："把那个慢查询优化下" —— AMDE 不给坐标不给手段；CMDE 库、方法、索引类型全给齐。
+- "顺手"只是人际语气壳，内核仍是**短坐标 + 祈使动词 + 一次性交付**，CMDE 指纹未破。
 
 ---
 

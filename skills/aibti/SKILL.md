@@ -249,6 +249,69 @@ description: 用 LLM 语义理解分析本地 Claude Code / Cursor / Codex / Cop
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+## 🎨 Step 7 · 生成可视化 HTML 报告（最后一步，必做）
+
+每次生成终端报告后，**还要额外渲染一份漂亮的 HTML 报告**到 `~/.aibti/report.html`（覆盖上次）。这是用户分享、截图、保留的主要产物。
+
+### 步骤
+
+1. 检查模板存在：`~/.aibti/report-template.html`
+   - 不存在时提示用户：`curl -sL https://raw.githubusercontent.com/leefufufufufu-rgb/aibti/main/install.sh | bash` 重新安装即可
+2. 检查立绘存在：`~/.aibti/portraits/` 下应有 16 个 SVG
+3. 读取模板内容
+4. **按下方占位符表逐个替换真实数据**
+5. 用 `Write` 工具写入 `~/.aibti/report.html`
+6. 终端最后一行提示用户：
+   - macOS: `open ~/.aibti/report.html`
+   - Linux: `xdg-open ~/.aibti/report.html`
+   - Windows: `start %USERPROFILE%\.aibti\report.html`
+
+### 占位符替换表（严格按此填）
+
+| 占位符 | 内容来源 |
+|---|---|
+| `{{LANG}}` | `zh-CN` 或 `en` |
+| `{{REPORT_DATE}}` | 生成时间 ISO（如 `2026-04-20 23:45`） |
+| `{{SAMPLE_COUNT}}` | 实质 prompt 数 |
+| `{{DAYS}}` | 扫描天数 |
+| `{{CONFIDENCE}}` | 置信度文本（High / Standard / Low / Insufficient） |
+| `{{GROUP_COLOR}}` | 主阵营色：Mystic=#a855f7 / Preacher=#fbbf24 / Sniper=#00ff88 / Craftsman=#60a5fa |
+| `{{MAIN_CODE}}` | 主人格 4 字母（如 `AMLX`） |
+| `{{MAIN_CODE_LOWER}}` | 小写（如 `amlx`，用于 SVG 文件名） |
+| `{{MAIN_EMOJI}}` | 🔮 |
+| `{{TRIBE_NAME}}` | Mystic / Preacher / Sniper / Craftsman |
+| `{{MAIN_NAME_ZH}}` | 中二名（如 `碎碎念诗人`） |
+| `{{MAIN_NAME_POSITIVE}}` | 正向标签（见 PERSONA_CARDS.md，如 `创造型思考者`） |
+| `{{MAIN_SLOGAN}}` | slogan 一句 |
+| `{{SUPERPOWERS_LIST}}` | `<li>超能力 1</li><li>超能力 2</li>` 至少 2 条 |
+| `{{DARK_SIDE}}` | 一句暗面 |
+| `{{TEMPLATE_BEFORE}}` | 改进前的典型 prompt |
+| `{{TEMPLATE_AFTER}}` | 改进后模板 |
+| `{{DIM_A_PCT}}` 等 8 个 | 四维百分比数字（不含 %） |
+| `{{DIM_AC_THEORY}}` 等 4 个 | 对应理论引用（从 THEORY.md 挑 1 条简短） |
+| `{{INTENT_CARDS}}` | 每个意图 `<div class="intent-card"><div class="intent-name">指令</div><div class="intent-pct">{{N}}%</div><div class="intent-mini-bar"><div class="intent-mini-fill" style="width:{{N}}%"></div></div></div>` |
+| `{{TOP6_ROWS}}` | 6 行 `<div class="top-row {{'main' if top1}}"><div class="top-emoji"><img src="portraits/{{code_lower}}.svg"></div><div class="top-code">CODE</div><div class="top-name">中文名</div><div class="top-bar-wrap"><div class="top-bar" style="width:{{pct*2}}%"></div></div><div class="top-pct">N%</div></div>` |
+| `{{EVIDENCE_CARDS}}` | 3-5 张 `<div class="evidence-card"><div class="evidence-text">真实 prompt</div><div class="evidence-meta">YYYY-MM-DD · project</div></div>` |
+| `{{DIAG_CARDS}}` | 诊断卡 `<div class="diag-card"><div class="diag-lead">主要问题</div><div class="diag-evidence">证据引用</div><div class="diag-theory">依据: 大神理论</div></div>` |
+| `{{BADGES_DISPLAY}}` | 有彩蛋 `block`，无则 `none` |
+| `{{BADGE_CARDS}}` | 每个徽章 `<div class="badge-card tier-N"><div class="badge-icon">🌙</div><div class="badge-name">徽章名</div><div class="badge-desc">解锁文案</div><span class="badge-rare">TIER N</span></div>` — **class 必须带对应 tier-1/2/3/4** |
+| `{{LEGENDARY_DISPLAY}}` | 命中任何 Tier 4 彩蛋 → `flex`；否则 `none` |
+| `{{LEGENDARY_NAME}}` | Tier 4 徽章名（如"反甩锅者"） |
+| `{{LEGENDARY_DESC}}` | Tier 4 解锁文案 |
+| `{{LEGENDARY_RARITY}}` | 稀有度数字（如 `1` 代表 <1%） |
+| `{{S_TIER_DISPLAY}}` | 主人格占比 ≥ 70% → `block`；否则 `none` |
+| `{{S_TIER_LABEL}}` | S 级称号（查 EASTER_EGGS.md Tier 2，如 `赛博诗社社长`） |
+| `{{SECONDARY_DISPLAY}}` | 有副人格 `block`，无则 `none` |
+| `{{SECONDARY_*}}` | 副人格对应字段 |
+| `{{PEAK_HOUR}}` / `{{MEDIAN_LEN}}` / 等 | 行为统计 |
+
+### 硬约束
+
+- HTML 必须是**完整自包含**的（模板已内联 CSS，占位符填完即可用）
+- 所有数字必须来自真实样本，禁止编造
+- SVG 路径用 **相对路径** `portraits/{{code_lower}}.svg`（报告 html 和 portraits/ 同在 ~/.aibti/ 下）
+- 如果 `~/.aibti/portraits/` 缺失，HTML 里 `<img>` 会 broken，但整体报告仍能看 — 提示用户重装
+
 ## 隐私保护
 
 - 引用的真实 prompt 如果含邮箱/密钥/手机号/生产数据库密码 → 自动替换为 `<REDACTED>`

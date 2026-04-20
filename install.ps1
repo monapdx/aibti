@@ -32,14 +32,17 @@ $PortraitDir = Join-Path $DataDir "portraits"
 New-Item -ItemType Directory -Force -Path $PortraitDir | Out-Null
 
 Invoke-WebRequest -UseBasicParsing "$Raw/report-template.html" -OutFile (Join-Path $DataDir "report-template.html")
-Write-Host -NoNewline "  "
 $Portraits = @("amde","amdx","amle","amlx","avde","avdx","avle","avlx","cmde","cmdx","cmle","cmlx","cvde","cvdx","cvle","cvlx")
-foreach ($code in $Portraits) {
-    Invoke-WebRequest -UseBasicParsing "$Raw/portraits/$code.svg" -OutFile (Join-Path $PortraitDir "$code.svg")
-    Write-Host "." -NoNewline
+$Total = $Portraits.Count
+for ($i = 0; $i -lt $Total; $i++) {
+    $code = $Portraits[$i]
+    $n = $i + 1
+    Write-Host -NoNewline ("`r  [{0,2}/{1}] downloading portraits/{2}.svg ... " -f $n, $Total, $code)
+    try {
+        Invoke-WebRequest -UseBasicParsing "$Raw/portraits/$code.svg" -OutFile (Join-Path $PortraitDir "$code.svg")
+    } catch {}
 }
-Write-Host ""
-Write-Host "  ✓ Report template + 16 portrait SVGs installed" -ForegroundColor Green
+Write-Host ("`r  ✓ Report template + {0} portrait SVGs installed                        " -f $Total) -ForegroundColor Green
 
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Green

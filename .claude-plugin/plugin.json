@@ -1,0 +1,22 @@
+{
+  "name": "aibti",
+  "version": "0.1.0",
+  "description": "AI Behavior Type Indicator — 用 LLM 语义分析你的提示词历史，测出你属于 16 种 AI 对话人格里的哪一种。行为不撒谎，提示词出卖你。",
+  "author": {
+    "name": "AIBTI Contributors"
+  },
+  "homepage": "https://github.com/your-username/aibti",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/aibti.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "prompt-engineering",
+    "personality",
+    "analytics",
+    "claude-code",
+    "mbti",
+    "developer-tools"
+  ]
+}

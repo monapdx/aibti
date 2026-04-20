@@ -354,7 +354,12 @@ date +%z   # 输出 +0800 / -0500 / +0000 等
 | `{{T_LOCAL_ONLY}}` | 100% 本地 · 零上传 | 100% local · zero telemetry |
 | `{{T_WEBSITE}}` | 官网 | Website |
 | `{{T_PRIVACY}}` | 隐私 | Privacy |
-| `{{T_FOOTER_NOTE}}` | 这份报告是你的。没人能看到。随时删：`rm ~/.aibti/report.html` | This report is yours. No one else sees it. Delete anytime: `rm ~/.aibti/report.html` |
+| `{{T_FOOTER_NOTE}}` | 这份报告是你的。没人能看到。随时删：<code>rm ~/.aibti/report.html</code> | This report is yours. No one else sees it. Delete anytime: <code>rm ~/.aibti/report.html</code> |
+| `{{T_MULTICORE}}` | 你是多核选手 | MULTI-CORE PERSONA |
+| `{{T_PRINT}}` | 打印 / 导出 PDF | Print / Export PDF |
+| `{{T_COPY_LINK}}` | 复制链接 | Copy link |
+| `{{T_STAR_GITHUB}}` | Star on GitHub | Star on GitHub |
+| `{{T_FEEDBACK}}` | 反馈 | Feedback |
 
 #### 数据占位符
 
@@ -417,6 +422,41 @@ date +%z   # 输出 +0800 / -0500 / +0000 等
 3. **Growth Letter 是灵魂**——用户读完会有"这 AI 懂我"的触感
 4. **Punchline 要锋利**，像 The Atlantic 或 The New Yorker 那种一句话概括
 5. **中文用户出中文**，英文用户出英文，不要混
+
+### 🚨 硬性规则（v0.3.1 必遵守）
+
+1. **百分比必须整数**：`style="width:54%"` 而非 `width:54.599999999999994%`
+2. **徽章必须用 SVG**，**禁止 emoji**：
+   ```html
+   <!-- ✗ 错 -->
+   <div style="font-size:32px">🧵</div>
+   <!-- ✓ 对 -->
+   <svg class="badge-svg"><use href="#i-flame"/></svg>
+   ```
+   可用的 SVG symbol（已内联在模板）：`#i-sparkle` `#i-star` `#i-alert` `#i-target` `#i-quote` `#i-letter` `#i-book` `#i-trending` `#i-moon` `#i-flame` `#i-crown` `#i-scroll`
+3. **16 型 TOP 6 的 rank-name 禁止 emoji**（左侧已有 portrait SVG）：
+   ```html
+   <!-- ✗ 错 --> <div class="rank-name">🔍 Bug 侦探</div>
+   <!-- ✓ 对 --> <div class="rank-name">Bug 侦探</div>
+   ```
+4. **The One Prompt 的 meta 必须有真实日期**，找不到具体日期就挑另一条 prompt，禁止 "2026-04-XX"
+5. **多核展示规则**（v0.3.1 新增）：
+   - 主人格占比 < 30% → `{{MULTICORE_DISPLAY}}` 设为 `block`，必须展示
+   - 主人格占比 ≥ 30% → 设为 `none`
+   - 多核卡 `{{MULTICORE_CARDS}}` 展示前 3 名：
+     ```html
+     <div class="core-card">
+       <img src="portraits/{{code_lower}}.svg" alt="{{name}}">
+       <div>
+         <div class="core-code">{{CODE}}</div>
+         <div class="core-name">{{中文名}}</div>
+         <div class="core-pct">{{整数}}%</div>
+       </div>
+     </div>
+     ```
+   - `{{MULTICORE_HEADLINE}}` 示例："你是三核选手 · 前三加起来才 47%"
+   - `{{MULTICORE_CAPTION}}`：一句话解读为什么多核是人格特征
+6. **不要假装 100% 确定单人格**。如果样本显示场景切换，就诚实展示
 
 ### 硬约束
 

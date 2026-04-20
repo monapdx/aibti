@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="120" cy="155" r="135" stroke-dasharray="2 8" opacity="0.15"/>
+  <circle cx="120" cy="155" r="108" stroke-dasharray="1 6" opacity="0.25"/>
+
+  <!-- 皇冠 -->
+  <path d="M92 40 L96 22 L106 30 L118 15 L130 30 L140 22 L144 40 L92 40Z"/>
+  <circle cx="96" cy="22" r="2" fill="#fbbf24"/>
+  <circle cx="140" cy="22" r="2" fill="#fbbf24"/>
+  <circle cx="118" cy="15" r="2.5" fill="#fbbf24"/>
+  <path d="M92 44 L144 44"/>
+
+  <!-- 头 -->
+  <ellipse cx="118" cy="68" rx="22" ry="25"/>
+
+  <!-- 威严眉毛（倒八字） -->
+  <path d="M105 58 L113 55"/>
+  <path d="M123 55 L131 58"/>
+
+  <!-- 眼睛（锐利） -->
+  <path d="M108 64 L114 64"/>
+  <path d="M122 64 L128 64"/>
+
+  <!-- 鼻 -->
+  <path d="M118 68 L116 76 L120 77"/>
+
+  <!-- 胡子 -->
+  <path d="M108 84 Q118 88 128 84"/>
+  <path d="M112 84 Q118 82 124 84" opacity="0.7"/>
+
+  <!-- 脖 -->
+  <path d="M112 91 L112 100 M124 91 L124 100"/>
+
+  <!-- 披肩+领子（华丽） -->
+  <path d="M80 108 Q118 100 156 108"/>
+  <path d="M80 108 L60 130 L85 135"/>
+  <path d="M156 108 L176 130 L151 135"/>
+  <path d="M90 114 Q118 108 146 114" opacity="0.5"/>
+
+  <!-- 身体（长袍） -->
+  <path d="M85 135 Q78 200 82 270"/>
+  <path d="M151 135 Q158 200 154 270"/>
+
+  <!-- 中间金饰 -->
+  <path d="M118 120 L118 240" stroke-dasharray="4 6" opacity="0.6"/>
+  <circle cx="118" cy="140" r="3"/>
+  <circle cx="118" cy="180" r="3"/>
+  <circle cx="118" cy="220" r="3"/>
+
+  <!-- 举卷轴的手 -->
+  <path d="M148 150 Q160 155 172 148"/>
+  <rect x="155" y="145" width="28" height="38" rx="1"/>
+  <path d="M160 155 L180 155 M160 161 L180 161 M160 167 L180 167 M160 173 L178 173 M160 179 L174 179"/>
+  <circle cx="155" cy="145" r="2"/>
+  <circle cx="183" cy="145" r="2"/>
+
+  <!-- 手指卷轴 -->
+  <path d="M148 150 L155 150" opacity="0.5"/>
+
+  <!-- 左手权杖式（握空拳叉腰） -->
+  <path d="M85 150 Q72 170 80 195"/>
+  <path d="M80 195 L82 205" opacity="0.6"/>
+
+  <!-- 下摆纹饰 -->
+  <path d="M82 270 L78 290 M154 270 L158 290"/>
+  <path d="M88 285 L148 285" opacity="0.4"/>
+
+  <!-- 头顶装饰 -->
+  <circle cx="55" cy="60" r="1.5" fill="#fbbf24" opacity="0.5"/>
+  <circle cx="185" cy="45" r="1.5" fill="#fbbf24" opacity="0.5"/>
+
+  <text x="120" y="310" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#fbbf24" stroke="none" letter-spacing="2">AVDE · PRD 暴君</text>
+</svg>

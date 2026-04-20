@@ -37,6 +37,24 @@ You'll get **two things**:
 
 **No signup · No API key · No network · No server.**
 
+### 🔄 Update to Latest
+
+```bash
+# macOS / Linux
+curl -sL https://raw.githubusercontent.com/leefufufufufu-rgb/aibti/main/update.sh | bash
+
+# Windows PowerShell
+irm https://raw.githubusercontent.com/leefufufufufu-rgb/aibti/main/update.ps1 | iex
+```
+
+Pulls the latest Skill + report template + portrait assets. **Your data (`~/.aibti/prompts.jsonl`, `report.html`) is never touched.** Shows recent changelog before updating.
+
+### 🗑 Uninstall
+
+```bash
+rm -rf ~/.claude/skills/aibti ~/.aibti
+```
+
 <details>
 <summary>Prefer manual install? Click to expand.</summary>
 
@@ -60,6 +78,26 @@ ln -s ~/.claude/plugins/aibti/skills/aibti ~/.claude/skills/aibti
 </details>
 
 ---
+
+## 💰 Token Consumption (be honest about cost)
+
+AIBTI uses Claude to semantically analyze your prompts — so **each scan consumes tokens** from your Claude Code subscription / API budget. We built in automatic sampling to keep it bounded:
+
+| Your prompt history | Strategy | Est. tokens | Rough API cost |
+|---|---|---:|---:|
+| < 100 prompts | Full analysis | ~5K | < $0.02 |
+| 100–500 | Full analysis | ~20-80K | $0.05 – $0.25 |
+| 500–2,000 | **Time-stratified sample (500)** | ~40-60K | $0.15 – $0.20 |
+| 2,000–5,000 | Sample (800) | ~80-100K | $0.25 – $0.35 |
+| > 5,000 | Sample (1000) + warning | ~120K | ~$0.40 |
+
+**Before each scan, AIBTI prints a one-line cost preview** so you decide whether to continue:
+
+```
+📊 Scan: 2847 prompts · sampling 500 · est. ~50K tokens (~$0.15)
+```
+
+Use `/aibti-today` (today only) for a cheaper ~10K-token snapshot. We recommend **weekly rhythm** — your personality doesn't change overnight, and weekly cadence costs < $1/month even for heavy users.
 
 ## 🔒 Privacy & Execution Manifesto (read this first)
 

@@ -170,9 +170,32 @@
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
-  /* Scan line */
-  .scan { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.4; z-index: 99; animation: scan 10s linear infinite; pointer-events: none; }
+  /* Scan line — subtle */
+  .scan { position: fixed; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.2; z-index: 99; animation: scan 12s linear infinite; pointer-events: none; }
   @keyframes scan { 0% { transform: translateY(-10px); } 100% { transform: translateY(100vh); } }
+
+  /* Multi-core banner (when main persona < 30%) */
+  .multicore { padding: 28px; margin-bottom: 48px; border-radius: 18px;
+    background: linear-gradient(135deg, rgba(var(--group-rgb),0.08), rgba(168,85,247,0.08));
+    border: 1px solid rgba(var(--group-rgb), 0.3); position: relative; }
+  .multicore-lead { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--group); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .multicore-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.4px; }
+  .multicore-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .core-card { padding: 16px; background: rgba(10,10,15,0.4); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; gap: 12px; }
+  .core-card img { width: 44px; height: 44px; }
+  .core-code { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: var(--text-faint); }
+  .core-name { font-size: 14px; font-weight: 600; margin: 2px 0; }
+  .core-pct { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: var(--group); letter-spacing: -0.5px; }
+  .multicore-caption { font-size: 14px; color: var(--text-dim); font-style: italic; line-height: 1.6; padding: 12px 16px; border-left: 3px solid var(--group); background: rgba(0,0,0,0.2); border-radius: 0 8px 8px 0; }
+
+  /* Share bar */
+  .share-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 48px; padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; }
+  .share-btn { padding: 10px 18px; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .share-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,136,0.05); }
+  .share-btn .icon { width: 14px; height: 14px; }
+
+  /* Inline code in footer */
+  footer code { font-family: 'JetBrains Mono', monospace; padding: 1px 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 3px; font-size: 11px; color: var(--accent); }
 </style>
 </head>
 <body>
@@ -230,6 +253,19 @@
     <div class="positive-label">{{MAIN_POSITIVE_LABEL}}</div>
     <div class="slogan">"{{MAIN_SLOGAN}}"</div>
   </div>
+</div>
+
+<!-- Multi-core banner (only if main persona < 30%) -->
+<div class="multicore" style="display:{{MULTICORE_DISPLAY}}">
+  <div class="multicore-lead">
+    <svg class="icon"><use href="#i-trending"/></svg>
+    {{T_MULTICORE}}
+  </div>
+  <div class="multicore-title">{{MULTICORE_HEADLINE}}</div>
+  <div class="multicore-grid">
+    {{MULTICORE_CARDS}}
+  </div>
+  <div class="multicore-caption">{{MULTICORE_CAPTION}}</div>
 </div>
 
 <!-- Narrative 1 · Opening Story -->
@@ -386,6 +422,14 @@
     <div class="signature">{{LETTER_SIGNATURE}}</div>
   </div>
 </section>
+
+<!-- Share bar -->
+<div class="share-bar">
+  <button class="share-btn" onclick="window.print()"><svg class="icon"><use href="#i-scroll"/></svg> {{T_PRINT}}</button>
+  <button class="share-btn" onclick="navigator.clipboard?.writeText(location.href)"><svg class="icon"><use href="#i-letter"/></svg> {{T_COPY_LINK}}</button>
+  <a class="share-btn" href="https://github.com/leefufufufufu-rgb/aibti" target="_blank"><svg class="icon"><use href="#i-star"/></svg> {{T_STAR_GITHUB}}</a>
+  <a class="share-btn" href="https://github.com/leefufufufufu-rgb/aibti/issues/new" target="_blank"><svg class="icon"><use href="#i-book"/></svg> {{T_FEEDBACK}}</a>
+</div>
 
 <footer>
   AIBTI v0.3.x · {{REPORT_DATE}} · {{T_LOCAL_ONLY}}<br>

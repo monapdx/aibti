@@ -11,7 +11,7 @@
 [![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)](./CHANGELOG.md)
 [![Website](https://img.shields.io/badge/Website-wengui.xyz/aibti-00ff88.svg)](https://wengui.xyz/aibti)
 
-🌍 **[English](#english)** · 🇨🇳 **[中文](#中文)** · 🎨 **[Live Demo](https://wengui.xyz/aibti)** · 🖼 **[16 Portraits](https://wengui.xyz/aibti/portraits/)**
+**[English](#english)** · **[中文](#中文)** · 🎨 **[Live Demo](https://wengui.xyz/aibti)** · 🖼 **[16 Portraits](https://wengui.xyz/aibti/portraits/)**
 
 </div>
 
@@ -103,7 +103,13 @@ Or use slash commands:
 
 ### 🎁 30+ Hidden Easter Eggs
 
-When your behavior hits extremes, AIBTI unlocks hidden badges — from common **"Night Owl"** to legendary **"Quantum Superposition"** (every dimension sitting at 48-52%, rarity < 0.1%). See [EASTER_EGGS.md](./EASTER_EGGS.md).
+When your behavior hits extremes, AIBTI unlocks hidden badges — from common **"Night Owl"** to legendary **"Quantum Superposition"** (every dimension sitting at 48-52%, rarity < 0.1%). See [EASTER_EGGS.en.md](./EASTER_EGGS.en.md).
+
+### 📖 Deep Dives
+
+- 📚 **[THEORY.md](./THEORY.md)** — Full 2020-2026 theoretical foundation (bilingual)
+- 🎭 **[PERSONA_CARDS.en.md](./PERSONA_CARDS.en.md)** — 16 positive persona cards with superpowers + growth areas
+- 🎁 **[EASTER_EGGS.en.md](./EASTER_EGGS.en.md)** — Full badge codex (4 tiers, 30+ badges)
 
 ### 🚀 Roadmap
 
@@ -222,6 +228,12 @@ git clone https://github.com/leefufufufufu-rgb/aibti.git ~/.claude/plugins/aibti
 ### 🎁 30+ 隐藏彩蛋
 
 当你的行为数据触发极致条件时，AIBTI 会偷偷解锁隐藏徽章——从常见的「**深夜活跃者**」到传说级「**量子叠加态**」（四维度每项都在 48-52%，稀有度 < 0.1%）。详见 [EASTER_EGGS.md](./EASTER_EGGS.md)。
+
+### 📖 深入阅读
+
+- 📚 **[THEORY.md](./THEORY.md)** — 2020-2026 完整理论根基（双语）
+- 🎭 **[PERSONA_CARDS.md](./PERSONA_CARDS.md)** — 16 型正向人格卡（超能力 + 进化空间）
+- 🎁 **[EASTER_EGGS.md](./EASTER_EGGS.md)** — 完整彩蛋图鉴（4 阶，30+ 徽章）
 
 ### 🚀 路线图
 

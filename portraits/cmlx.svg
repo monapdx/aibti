@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="120" cy="155" r="135" stroke-dasharray="2 8" opacity="0.15"/>
+  <circle cx="120" cy="155" r="108" stroke-dasharray="1 6" opacity="0.25"/>
+
+  <!-- 举起手 + SOS -->
+  <path d="M130 80 L140 20" stroke-width="2"/>
+  <!-- 手掌张开 -->
+  <circle cx="142" cy="18" r="4"/>
+  <path d="M139 15 L136 11 M142 14 L143 9 M145 15 L148 11" opacity="0.7"/>
+
+  <!-- SOS 气泡 -->
+  <ellipse cx="175" cy="30" rx="24" ry="16"/>
+  <text x="175" y="34" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" stroke="none" fill="#00ff88">SOS</text>
+  <path d="M160 44 L155 52" opacity="0.5"/>
+
+  <!-- 头发（凌乱，焦虑） -->
+  <path d="M93 52 Q90 40 100 38 Q115 36 130 40 Q143 44 145 54"/>
+  <path d="M102 42 L100 32" opacity="0.5"/>
+  <path d="M135 44 L138 34" opacity="0.5"/>
+
+  <!-- 头 -->
+  <ellipse cx="118" cy="68" rx="22" ry="25"/>
+
+  <!-- 眉毛（紧皱） -->
+  <path d="M105 58 L113 60"/>
+  <path d="M123 60 L131 58"/>
+
+  <!-- 眼睛（困惑） -->
+  <circle cx="112" cy="64" r="2"/>
+  <circle cx="124" cy="64" r="2"/>
+  <circle cx="112" cy="65" r="0.8" fill="#00ff88"/>
+  <circle cx="124" cy="65" r="0.8" fill="#00ff88"/>
+
+  <!-- 嘴（哀嚎） -->
+  <ellipse cx="118" cy="82" rx="4" ry="5"/>
+
+  <!-- 汗滴 -->
+  <path d="M98 60 Q96 64 99 66 Q101 64 99 60" opacity="0.7"/>
+  <path d="M142 65 Q140 69 143 71 Q145 69 143 65" opacity="0.7"/>
+
+  <!-- 脖 -->
+  <path d="M112 91 L112 100 M124 91 L124 100"/>
+
+  <!-- T恤领 -->
+  <path d="M88 110 Q118 102 148 110"/>
+
+  <!-- T恤 -->
+  <path d="M88 110 L82 260"/>
+  <path d="M148 110 L154 260"/>
+
+  <!-- 举起的右手（连接到前面的 SOS） -->
+  <path d="M148 120 Q140 100 135 85"/>
+
+  <!-- 左手抱头 -->
+  <path d="M88 120 Q80 140 95 150 L108 140" opacity="0.8"/>
+
+  <!-- 衣服上的破洞 / 困惑纹路 -->
+  <path d="M110 170 L115 175 L108 180" opacity="0.5"/>
+  <path d="M130 200 L125 205" opacity="0.4"/>
+
+  <!-- 腿（一只站不稳） -->
+  <path d="M95 265 L88 300 M140 265 L147 298"/>
+
+  <!-- 地上散落的"报错" -->
+  <text x="60" y="290" font-size="9" stroke="none" fill="#00ff88" opacity="0.6">ERROR</text>
+  <text x="170" y="285" font-size="9" stroke="none" fill="#00ff88" opacity="0.5">NPE</text>
+
+  <text x="120" y="315" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#00ff88" stroke="none" letter-spacing="2">CMLX · 卡点求助侠</text>
+</svg>

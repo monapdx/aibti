@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<!--
+  AIBTI · Report Template v0.3.0 · Narrative Edition
+  ====================================================
+  Claude's /aibti Skill replaces every {{PLACEHOLDER}} with real data,
+  picks a tone that matches the user's prompt history, and writes the
+  result to ~/.aibti/report.html (overwriting the previous one).
+
+  All static text uses {{T_*}} i18n placeholders — Skill fills them
+  with the user's detected language.
+
+  Fully self-contained · no external scripts · no network.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIBTI · Ashly Lorenzana · AXDL-X</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f; --bg-card: #13131a; --bg-soft: #181822;
+    --border: #252534; --border-hot: var(--group);
+    --text: #e8e8f0; --text-dim: #8888a0; --text-faint: #55556a;
+    --accent: #00ff88; --accent-2: #a855f7; --accent-3: #fbbf24; --blue: #60a5fa;
+    --group: #f472b6;
+    --group-rgb: 244,114,182;
+  }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', system-ui, sans-serif; }
+  body { min-height: 100vh; padding: 32px 24px 96px; overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 10% 0%, rgba(var(--group-rgb),0.15), transparent 50%),
+      radial-gradient(ellipse at 90% 100%, rgba(168,85,247,0.1), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px); }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace; }
+  .serif { font-family: 'Noto Serif SC', Georgia, serif; }
+  .container { max-width: 960px; margin: 0 auto; position: relative; }
+
+  /* SVG icon system */
+  .icon { width: 18px; height: 18px; display: inline-block; vertical-align: -3px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-lg { width: 28px; height: 28px; }
+
+  /* Header */
+  header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; letter-spacing: 1px; }
+  .logo .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); text-align: right; line-height: 1.6; letter-spacing: 0.5px; }
+
+  /* Legendary banner */
+  .legendary-banner { padding: 14px 20px; margin-bottom: 24px; border-radius: 12px;
+    background: linear-gradient(90deg, rgba(168,85,247,0.18), rgba(251,191,36,0.12), rgba(168,85,247,0.18));
+    background-size: 200% 100%; animation: shimmer 4s ease-in-out infinite;
+    border: 1px solid rgba(251,191,36,0.5);
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .legendary-banner .msg strong { background: linear-gradient(90deg, #fbbf24, #a855f7); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 2px; }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; margin-bottom: 48px; padding: 40px; background: linear-gradient(135deg, rgba(var(--group-rgb),0.1), rgba(10,10,15,0.6)); border: 1px solid var(--group); border-radius: 24px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 40%, rgba(var(--group-rgb),0.18), transparent 60%); pointer-events: none; }
+  @media (max-width: 768px) { .hero { grid-template-columns: 1fr; text-align: center; padding: 28px; } }
+  .portrait { position: relative; z-index: 1; display: flex; justify-content: center; }
+  .portrait img { width: 100%; max-width: 280px; height: auto; filter: drop-shadow(0 0 50px rgba(var(--group-rgb),0.4)); }
+  .hero-info { position: relative; z-index: 1; }
+  .code-tag { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--group); letter-spacing: 4px; font-weight: 700; margin-bottom: 10px; opacity: 0.9; }
+  .name { font-size: clamp(34px, 5.5vw, 56px); font-weight: 800; letter-spacing: -1.5px; line-height: 1; margin-bottom: 10px; }
+  .positive-label { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-dim); margin-bottom: 20px; letter-spacing: 1px; }
+  .slogan { font-size: 19px; font-weight: 500; color: var(--text); font-style: italic; padding: 14px 20px; border-left: 3px solid var(--group); background: rgba(0,0,0,0.3); border-radius: 0 10px 10px 0; }
+
+  .s-tier-crown { position: absolute; top: 20px; right: 20px; padding: 7px 18px; background: linear-gradient(90deg, #fbbf24, #a855f7); color: #000; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800; letter-spacing: 2px; border-radius: 100px; box-shadow: 0 0 20px rgba(251,191,36,0.4); animation: crown 3s ease-in-out infinite; z-index: 2; }
+  @keyframes crown { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+
+  /* Narrative sections — the soul of v0.3 */
+  .story-block { margin-bottom: 56px; padding: 0; }
+  .story-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--group); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .story-eyebrow .icon { color: var(--group); }
+  .story-title { font-size: clamp(24px, 3.5vw, 36px); font-weight: 700; letter-spacing: -0.8px; margin-bottom: 20px; line-height: 1.2; }
+  .story-body { font-size: 17px; line-height: 1.75; color: var(--text); max-width: 700px; }
+  .story-body p { margin-bottom: 14px; }
+  .story-body em { color: var(--group); font-style: normal; font-weight: 600; }
+
+  /* The One Prompt — pull-quote style */
+  .pullquote-box { position: relative; padding: 48px 56px; margin: 32px 0; border-radius: 20px;
+    background: linear-gradient(135deg, rgba(var(--group-rgb),0.08), rgba(10,10,15,0.8));
+    border: 1px solid rgba(var(--group-rgb), 0.3); }
+  .pullquote-box::before, .pullquote-box::after { position: absolute; font-family: 'Noto Serif SC', Georgia, serif; font-size: 80px; color: var(--group); opacity: 0.3; line-height: 1; }
+  .pullquote-box::before { content: '"'; top: 12px; left: 20px; }
+  .pullquote-box::after { content: '"'; bottom: -20px; right: 20px; transform: rotate(180deg); }
+  .pullquote-text { font-family: 'Noto Serif SC', Georgia, serif; font-size: clamp(20px, 3vw, 30px); font-weight: 500; line-height: 1.5; color: var(--text); letter-spacing: -0.3px; }
+  .pullquote-meta { margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-faint); }
+  .pullquote-punchline { margin-top: 20px; font-size: 15px; color: var(--group); font-weight: 600; }
+
+  /* 4D with punchlines */
+  .dims { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+  .dim-group { display: flex; flex-direction: column; gap: 24px; }
+  .dim-row-wrap { padding-bottom: 16px; border-bottom: 1px dashed var(--border); }
+  .dim-row-wrap:last-child { border-bottom: none; padding-bottom: 0; }
+  .dim-row { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .dim-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .dim-label.left { text-align: left; color: var(--accent); }
+  .dim-label.right { text-align: right; color: var(--accent-2); }
+  .dim-bar { height: 22px; background: var(--bg); border-radius: 4px; position: relative; overflow: hidden; }
+  .dim-bar .fill-a { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--accent), rgba(0,255,136,0.3)); border-radius: 4px 0 0 4px; transition: width 1s ease-out; }
+  .dim-bar .fill-b { position: absolute; right: 0; top: 0; bottom: 0; background: linear-gradient(-90deg, var(--accent-2), rgba(168,85,247,0.3)); border-radius: 0 4px 4px 0; transition: width 1s ease-out; }
+  .dim-bar .pct-l, .dim-bar .pct-r { position: absolute; top: 50%; transform: translateY(-50%); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #fff; font-weight: 700; }
+  .dim-bar .pct-l { left: 10px; }
+  .dim-bar .pct-r { right: 10px; }
+  .dim-punchline { margin-top: 8px; font-size: 14px; color: var(--text-dim); font-style: italic; padding-left: 92px; }
+  .dim-cite { margin-top: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-faint); padding-left: 92px; }
+  .dim-cite .cite-src { color: var(--group); font-weight: 600; }
+
+  /* 16 types — ranked rows */
+  .rank-list { display: flex; flex-direction: column; gap: 8px; }
+  .rank-row { display: grid; grid-template-columns: 36px 72px 1fr 1fr 48px; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; transition: all 0.3s; }
+  .rank-row:hover { border-color: var(--group); }
+  .rank-row.main { border-color: var(--group); background: linear-gradient(90deg, rgba(var(--group-rgb),0.12), var(--bg-card)); }
+  .rank-row img { width: 32px; height: 32px; }
+  .rank-code { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: var(--group); }
+  .rank-name { font-size: 14px; font-weight: 600; }
+  .rank-bar-wrap { height: 16px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .rank-bar { height: 100%; background: linear-gradient(90deg, var(--group), rgba(var(--group-rgb),0.3)); border-radius: 3px; transition: width 1s; }
+  .rank-pct { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); text-align: right; }
+
+  /* Growth Letter — new hero section */
+  .letter { padding: 48px; border-radius: 24px;
+    background: linear-gradient(135deg, rgba(var(--group-rgb),0.05), rgba(168,85,247,0.05));
+    border: 1px solid rgba(var(--group-rgb), 0.3);
+    font-family: 'Noto Serif SC', Georgia, serif;
+    line-height: 1.8; font-size: 17px;
+    position: relative; overflow: hidden;
+  }
+  .letter::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--group), var(--accent-2)); }
+  .letter .letter-header { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--group); margin-bottom: 20px; text-transform: uppercase; }
+  .letter .salutation { font-size: 22px; font-weight: 700; margin-bottom: 20px; color: var(--group); }
+  .letter .body p { margin-bottom: 14px; }
+  .letter .signature { margin-top: 28px; padding-top: 20px; border-top: 1px dashed rgba(var(--group-rgb), 0.3); font-style: italic; color: var(--text-dim); font-size: 14px; }
+
+  /* Badges */
+  .badges-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .badge-card { padding: 20px; border-radius: 14px; background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(10,10,15,0.5)); border: 1px solid rgba(251,191,36,0.35); position: relative; overflow: hidden; transition: transform 0.3s; }
+  .badge-card:hover { transform: translateY(-3px); }
+  .badge-card.tier-2 { background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(10,10,15,0.5)); border-color: rgba(0,255,136,0.5); }
+  .badge-card.tier-3 { background: linear-gradient(135deg, rgba(96,165,250,0.1), rgba(10,10,15,0.5)); border-color: rgba(96,165,250,0.5); }
+  .badge-card.tier-4 {
+    background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(251,191,36,0.12), rgba(168,85,247,0.25));
+    background-size: 200% 200%; animation: shimmer 6s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(168,85,247,0.3), 0 0 60px rgba(251,191,36,0.15);
+  }
+  .badge-card.tier-4::before { content: 'LEGENDARY'; position: absolute; top: 10px; right: 12px; font-size: 9px; font-family: 'JetBrains Mono', monospace; letter-spacing: 3px; color: #fbbf24; font-weight: 700; animation: pulse 2s infinite; }
+  .badge-card.tier-4 .badge-name { background: linear-gradient(90deg, #fbbf24, #a855f7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .badge-card .badge-svg { width: 36px; height: 36px; margin-bottom: 10px; stroke: currentColor; fill: none; stroke-width: 1.8; color: var(--group); }
+  .badge-card.tier-4 .badge-svg { color: #fbbf24; }
+  .badge-name { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .badge-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .badge-rare { display: inline-block; margin-top: 10px; padding: 3px 10px; font-size: 10px; font-family: 'JetBrains Mono', monospace; border-radius: 4px; letter-spacing: 2px; font-weight: 700; background: rgba(var(--group-rgb), 0.2); color: var(--group); }
+  .badge-card.tier-4 .badge-rare { background: linear-gradient(90deg, rgba(168,85,247,0.3), rgba(251,191,36,0.3)); color: #fff; }
+
+  /* Stats strip */
+  .stats-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; }
+  .stat-item { text-align: center; }
+  .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 800; color: var(--group); letter-spacing: -0.5px; }
+  .stat-label { font-size: 11px; color: var(--text-faint); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* Footer */
+  footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; color: var(--text-faint); font-size: 12px; font-family: 'JetBrains Mono', monospace; line-height: 1.8; }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* Scan line — subtle */
+  .scan { position: fixed; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.2; z-index: 99; animation: scan 12s linear infinite; pointer-events: none; }
+  @keyframes scan { 0% { transform: translateY(-10px); } 100% { transform: translateY(100vh); } }
+
+  /* Multi-core banner (when main persona < 30%) */
+  .multicore { padding: 28px; margin-bottom: 48px; border-radius: 18px;
+    background: linear-gradient(135deg, rgba(var(--group-rgb),0.08), rgba(168,85,247,0.08));
+    border: 1px solid rgba(var(--group-rgb), 0.3); position: relative; }
+  .multicore-lead { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--group); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .multicore-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.4px; }
+  .multicore-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .core-card { padding: 16px; background: rgba(10,10,15,0.4); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; gap: 12px; }
+  .core-card img { width: 44px; height: 44px; }
+  .core-code { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: var(--text-faint); }
+  .core-name { font-size: 14px; font-weight: 600; margin: 2px 0; }
+  .core-pct { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: var(--group); letter-spacing: -0.5px; }
+  .multicore-caption { font-size: 14px; color: var(--text-dim); font-style: italic; line-height: 1.6; padding: 12px 16px; border-left: 3px solid var(--group); background: rgba(0,0,0,0.2); border-radius: 0 8px 8px 0; }
+
+  /* Share bar */
+  .share-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 48px; padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; }
+  .share-btn { padding: 10px 18px; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .share-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,136,0.05); }
+  .share-btn .icon { width: 14px; height: 14px; }
+
+  /* Inline code in footer */
+  footer code { font-family: 'JetBrains Mono', monospace; padding: 1px 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 3px; font-size: 11px; color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<!-- Reusable SVG icon definitions -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3L2 21h20L12 3zM12 10v5M12 18v.5"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7c-2 0-3 2-3 4v4h4V9H6M17 7c-2 0-3 2-3 4v4h4V9h-2"/></symbol>
+    <symbol id="i-letter" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4v16h14V4H4zM4 4c0-1 1-2 2-2h12v16H6c-1 0-2 .5-2 2"/></symbol>
+    <symbol id="i-trending" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 13.5A9 9 0 1 1 10 3a7 7 0 0 0 10 10.5z"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2s4 4 4 9a4 4 0 1 1-8 0c0-2 1-3 2-4C9 5 12 2 12 2z"/></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 18l2-10 4 5 3-8 3 8 4-5 2 10z"/><path d="M3 21h18"/></symbol>
+    <symbol id="i-scroll" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 8h6M9 12h6M9 16h4"/></symbol>
+  </defs>
+</svg>
+
+<div class="container">
+
+<header>
+  <div class="logo"><span class="dot"></span>AIBTI</div>
+  <div class="meta">
+    2026-04-20 · ∞ prompts · interpretive profile · medium confidence
+  </div>
+</header>
+
+<!-- Legendary banner (only if Tier 4 unlocked) -->
+<div class="legendary-banner" style="display:flex">
+  <svg class="icon-lg" style="color:#fbbf24"><use href="#i-sparkle"/></svg>
+  <div class="msg">
+    <strong>LEGENDARY TRAIT</strong> — System Disruptor<br>
+    <span style="color:var(--text-dim)">High sensitivity to fake structure, coercive norms, and overbuilt systems.</span>
+  </div>
+  <svg class="icon-lg" style="color:#a855f7"><use href="#i-sparkle"/></svg>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="s-tier-crown" style="display:block">
+    <svg class="icon" style="color:#000;stroke-width:2"><use href="#i-crown"/></svg>
+    S-TIER · pattern realism
+  </div>
+  <div class="portrait">
+    <img src="portraits/axdl.svg" alt="Ashly Lorenzana">
+  </div>
+  <div class="hero-info">
+    <div class="code-tag">AXDL-X · Independent Systems Thinker</div>
+    <div class="name">Ashly Lorenzana</div>
+    <div class="positive-label">High-agency, low-illusion operator</div>
+    <div class="slogan">"I don’t chase outcomes — I strip away what doesn’t make sense until something real is left."</div>
+  </div>
+</div>
+
+<!-- Multi-core banner (only if main persona < 30%) -->
+<div class="multicore" style="display:block">
+  <div class="multicore-lead">
+    <svg class="icon"><use href="#i-trending"/></svg>
+    MULTI-CORE SIGNAL
+  </div>
+  <div class="multicore-title">Your profile is not a single clean lane. It is a stable core with several strong adjacent modes.</div>
+  <div class="multicore-grid">
+    <div class="core-card"><img src="portraits/axdl.svg" alt="AXDL"><div><div class="core-code">AXDL</div><div class="core-name">Independent Systems Thinker</div><div class="core-pct">34%</div></div></div>
+<div class="core-card"><img src="portraits/axdl.svg" alt="ACDE"><div><div class="core-code">ACDE</div><div class="core-name">Strategic Realist</div><div class="core-pct">22%</div></div></div>
+<div class="core-card"><img src="portraits/axdl.svg" alt="AVLX"><div><div class="core-code">AVLX</div><div class="core-name">Inner-Compass Idealist</div><div class="core-pct">18%</div></div></div>
+  </div>
+  <div class="multicore-caption">You are not one note. Your center is analytical and skeptical, but it is layered with independence, intensity, and a surprisingly values-driven emotional spine.</div>
+</div>
+
+<!-- Narrative 1 · Opening Story -->
+<section class="story-block">
+  <div class="story-eyebrow">
+    <svg class="icon"><use href="#i-book"/></svg>
+    OPENING STORY
+  </div>
+  <h2 class="story-title">You are not unmotivated. You are unconvinced.</h2>
+  <div class="story-body">
+    <p>You move through the world like someone constantly running a background integrity check. Before you commit to a goal, a workflow, a relationship dynamic, or even a casual assumption, you test whether it actually holds up.</p>
+<p>That makes you look selective, skeptical, and sometimes hard to impress — because you are. But it also means you are unusually resistant to hollow structure. You do not confuse motion with meaning. You do not automatically treat popularity as proof. And you do not stay attached to something just because other people call it normal.</p>
+<p>Your strongest pattern is not disengagement. It is <em>selective alignment</em>. When something feels coherent, honest, and worth your time, you go deep. When it feels fake, manipulative, or padded with bullshit, your interest evaporates almost instantly.</p>
+  </div>
+</section>
+
+<!-- Narrative 2 · The One Prompt That Sums You Up -->
+<section class="story-block">
+  <div class="story-eyebrow">
+    <svg class="icon"><use href="#i-quote"/></svg>
+    THE ONE PROMPT
+  </div>
+  <div class="pullquote-box">
+    <div class="pullquote-text serif">I understand how this is supposed to work, but something about it does not sit right.</div>
+    <div class="pullquote-meta">— Recurring pattern across your technical, emotional, and philosophical conversations</div>
+    <div class="pullquote-punchline">You do not just solve problems — you pressure-test whether the frame itself deserves to exist.</div>
+  </div>
+</section>
+
+<!-- 4D with punchlines -->
+<section class="story-block">
+  <div class="story-eyebrow">
+    <svg class="icon"><use href="#i-target"/></svg>
+    FOUR DIMENSIONS
+  </div>
+  <div class="dims">
+    <div class="dim-group">
+      <div class="dim-row-wrap">
+        <div class="dim-row">
+          <div class="dim-label left">A · ABSTRACT</div>
+          <div class="dim-bar">
+            <div class="fill-a" style="width:82%"></div>
+            <div class="fill-b" style="width:18%"></div>
+            <div class="pct-l">82%</div>
+            <div class="pct-r">18%</div>
+          </div>
+          <div class="dim-label right">CONCRETE · C</div>
+        </div>
+        <div class="dim-punchline">You prefer systems, patterns, and meta-structure over step-by-step procedure.</div>
+        <div class="dim-cite"><span class="cite-src">→</span> You would rather redesign the game than play a broken one efficiently.</div>
+      </div>
+      <div class="dim-row-wrap">
+        <div class="dim-row">
+          <div class="dim-label left">M · MINIMAL</div>
+          <div class="dim-bar">
+            <div class="fill-a" style="width:68%"></div>
+            <div class="fill-b" style="width:32%"></div>
+            <div class="pct-l">68%</div>
+            <div class="pct-r">32%</div>
+          </div>
+          <div class="dim-label right">VERBOSE · V</div>
+        </div>
+        <div class="dim-punchline">Your default is concise, but you will go deep when the subject deserves depth.</div>
+        <div class="dim-cite"><span class="cite-src">→</span> You do not ramble; you expand only when compression would distort the truth.</div>
+      </div>
+      <div class="dim-row-wrap">
+        <div class="dim-row">
+          <div class="dim-label left">D · DIRECTIVE</div>
+          <div class="dim-bar">
+            <div class="fill-a" style="width:55%"></div>
+            <div class="fill-b" style="width:45%"></div>
+            <div class="pct-l">55%</div>
+            <div class="pct-r">45%</div>
+          </div>
+          <div class="dim-label right">COLLAB · L</div>
+        </div>
+        <div class="dim-punchline">You often know what you want, but you still use dialogue to sharpen the edge.</div>
+        <div class="dim-cite"><span class="cite-src">→</span> Control is not the goal. Coherence is.</div>
+      </div>
+      <div class="dim-row-wrap">
+        <div class="dim-row">
+          <div class="dim-label left">X · EXPLORE</div>
+          <div class="dim-bar">
+            <div class="fill-a" style="width:74%"></div>
+            <div class="fill-b" style="width:26%"></div>
+            <div class="pct-l">74%</div>
+            <div class="pct-r">26%</div>
+          </div>
+          <div class="dim-label right">EXECUTE · E</div>
+        </div>
+        <div class="dim-punchline">You live in the why longer than most people tolerate.</div>
+        <div class="dim-cite"><span class="cite-src">→</span> Exploration is not stalling for you; it is quality control.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats strip -->
+<section class="story-block">
+  <div class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-value">∞</div>
+      <div class="stat-label">prompt style</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">late night</div>
+      <div class="stat-label">peak hour</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">medium-long</div>
+      <div class="stat-label">median prompt length</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">65%</div>
+      <div class="stat-label">night ratio</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">very long</div>
+      <div class="stat-label">longest thread style</div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 Types TOP 6 -->
+<section class="story-block">
+  <div class="story-eyebrow">
+    <svg class="icon"><use href="#i-trending"/></svg>
+    TOP ARCHETYPES
+  </div>
+  <div class="rank-list">
+    <div class="rank-row main">
+  <div class="mono">01</div>
+  <img src="portraits/axdl.svg" alt="AXDL">
+  <div>
+    <div class="rank-code">AXDL</div>
+    <div class="rank-name">Independent Systems Thinker</div>
+  </div>
+  <div class="rank-bar-wrap"><div class="rank-bar" style="width:34%"></div></div>
+  <div class="rank-pct">34%</div>
+</div>
+<div class="rank-row">
+  <div class="mono">02</div>
+  <img src="portraits/axdl.svg" alt="INTJ">
+  <div>
+    <div class="rank-code">ACDE</div>
+    <div class="rank-name">Strategic Realist</div>
+  </div>
+  <div class="rank-bar-wrap"><div class="rank-bar" style="width:22%"></div></div>
+  <div class="rank-pct">22%</div>
+</div>
+<div class="rank-row">
+  <div class="mono">03</div>
+  <img src="portraits/axdl.svg" alt="INFP">
+  <div>
+    <div class="rank-code">AVLX</div>
+    <div class="rank-name">Inner-Compass Idealist</div>
+  </div>
+  <div class="rank-bar-wrap"><div class="rank-bar" style="width:18%"></div></div>
+  <div class="rank-pct">18%</div>
+</div>
+<div class="rank-row">
+  <div class="mono">04</div>
+  <img src="portraits/axdl.svg" alt="ENTP">
+  <div>
+    <div class="rank-code">AXLX</div>
+    <div class="rank-name">Idea Explorer</div>
+  </div>
+  <div class="rank-bar-wrap"><div class="rank-bar" style="width:12%"></div></div>
+  <div class="rank-pct">12%</div>
+</div>
+<div class="rank-row">
+  <div class="mono">05</div>
+  <img src="portraits/axdl.svg" alt="ISTP">
+  <div>
+    <div class="rank-code">CMDE</div>
+    <div class="rank-name">Pragmatic Fixer</div>
+  </div>
+  <div class="rank-bar-wrap"><div class="rank-bar" style="width:8%"></div></div>
+  <div class="rank-pct">8%</div>
+</div>
+<div class="rank-row">
+  <div class="mono">06</div>
+  <img src="portraits/axdl.svg" alt="Mixed">
+  <div>
+    <div class="rank-code">MIXD</div>
+    <div class="rank-name">Residual blend</div>
+  </div>
+  <div class="rank-bar-wrap"><div class="rank-bar" style="width:6%"></div></div>
+  <div class="rank-pct">6%</div>
+</div>
+  </div>
+</section>
+
+<!-- Badges (only if any unlocked) -->
+<section class="story-block" style="display:block">
+  <div class="story-eyebrow">
+    <svg class="icon"><use href="#i-sparkle"/></svg>
+    UNLOCKED BADGES
+  </div>
+  <div class="badges-grid">
+    <div class="badge-card tier-4">
+  <svg class="badge-svg"><use href="#i-flame"/></svg>
+  <div class="badge-name">System Disruptor</div>
+  <div class="badge-desc">You instinctively reject structures that feel fake, bloated, or coercive, whether they are workflows, institutions, or social scripts.</div>
+  <div class="badge-rare">TIER 4</div>
+</div>
+<div class="badge-card tier-3">
+  <svg class="badge-svg"><use href="#i-moon"/></svg>
+  <div class="badge-name">Night Signal</div>
+  <div class="badge-desc">A lot of your clearest thinking happens off-hours, when the noise drops and the patterns finally have room to surface.</div>
+  <div class="badge-rare">TIER 3</div>
+</div>
+<div class="badge-card tier-3">
+  <svg class="badge-svg"><use href="#i-target"/></svg>
+  <div class="badge-name">Internal Compass User</div>
+  <div class="badge-desc">You lean on internal logic more than consensus, and you trust your own sense of what is real long before group approval shows up.</div>
+  <div class="badge-rare">TIER 3</div>
+</div>
+<div class="badge-card tier-2">
+  <svg class="badge-svg"><use href="#i-sparkle"/></svg>
+  <div class="badge-name">Pattern Snap</div>
+  <div class="badge-desc">You often see the shape of a situation quickly. The hard part is not spotting the pattern — it is deciding whether the pattern deserves your energy.</div>
+  <div class="badge-rare">TIER 2</div>
+</div>
+  </div>
+</section>
+
+<!-- Narrative 3 · Growth Letter (the emotional close) -->
+<section class="story-block">
+  <div class="story-eyebrow">
+    <svg class="icon"><use href="#i-letter"/></svg>
+    GROWTH LETTER
+  </div>
+  <div class="letter">
+    <div class="letter-header">FROM THE MIRROR</div>
+    <div class="salutation">Ashly,</div>
+    <div class="body serif"><p>You are not lacking direction as much as you are lacking tolerance for fake direction.</p>
+<p>That distinction matters. A lot of people can keep moving inside structures that do not fit them, as long as the structure is familiar. You usually cannot. Your mind keeps testing for internal consistency, and when it does not find it, your energy drops. Not because you are lazy, but because some part of you refuses to outsource reality.</p>
+<p>The strength in that is obvious: you are hard to fool for long. The risk is that you can end up rejecting imperfect paths that might still be worth shaping into your own. The next layer of growth is not learning to obey more structure. It is learning which structures are unfinished raw material, and which ones are dead ends in disguise.</p>
+<p>You do not need a louder motivational speech. You need fewer false options, clearer signal, and permission to build around what is actually true for you.</p></div>
+    <div class="signature">— A mirror, not a manager</div>
+  </div>
+</section>
+
+<!-- Share bar -->
+<div class="share-bar">
+  <button class="share-btn" onclick="window.print()"><svg class="icon"><use href="#i-scroll"/></svg> Print</button>
+  <button class="share-btn" onclick="navigator.clipboard?.writeText(location.href)"><svg class="icon"><use href="#i-letter"/></svg> Copy link</button>
+  <a class="share-btn" href="https://github.com/leefufufufufu-rgb/aibti" target="_blank"><svg class="icon"><use href="#i-star"/></svg> Star GitHub</a>
+  <a class="share-btn" href="https://github.com/leefufufufufu-rgb/aibti/issues/new" target="_blank"><svg class="icon"><use href="#i-book"/></svg> Feedback</a>
+</div>
+
+<footer>
+  AIBTI v0.3.x · 2026-04-20 · local rendering · no server<br>
+  <a href="https://github.com/leefufufufufu-rgb/aibti">GitHub</a> ·
+  <a href="https://leefufufufufu-rgb.github.io/aibti/">website</a> ·
+  <a href="https://github.com/leefufufufufu-rgb/aibti/blob/main/PRIVACY.md">privacy</a>
+  <br><br>
+  <em>Interpretive profile generated from long-term conversational patterns, not a clinical or scientific assessment.</em>
+</footer>
+
+</div>
+
+<script>
+  // Subtle entrance animations
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.fill-a, .fill-b, .rank-bar').forEach((el, i) => {
+      const target = el.style.width;
+      el.style.width = '0%';
+      setTimeout(() => el.style.width = target, 150 + i * 40);
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -61,16 +61,20 @@ ln -s ~/.claude/plugins/aibti/skills/aibti ~/.claude/skills/aibti
 
 ---
 
-## 🔒 Privacy Manifesto (read this first)
+## 🔒 Privacy & Execution Manifesto (read this first)
 
 ```
+✓  100% passive — runs ONLY when you say "Analyze my AIBTI"
+✓  Zero background processes — your normal dev workflow is untouched
 ✓  100% local — your prompts never leave your machine
 ✓  Zero network requests — verifiable in < 5 lines of code
 ✓  Zero telemetry, zero analytics, zero account
 ✓  MIT open-source — every file is auditable (~50 files total)
-✓  Auto-redaction — emails / API keys / phone numbers masked before anything is written
 ✗  No cloud. No server. No "free tier". No "upgrade to pro".
+✗  No watchers. No daemons. No hooks (unless you opt in separately).
 ```
+
+**This is a pure personality test, not a productivity tool.** You type "Analyze my AIBTI" → it runs once → you get a report → it goes back to sleep. That's the entire lifecycle.
 
 **Verify for yourself**: `./scripts/check-network.sh` — proves AIBTI makes zero network calls. See [PRIVACY.md](./PRIVACY.md) for the full deep-dive.
 

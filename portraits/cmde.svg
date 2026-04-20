@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="120" cy="155" r="135" stroke-dasharray="2 8" opacity="0.15"/>
+  <circle cx="120" cy="155" r="108" stroke-dasharray="1 6" opacity="0.25"/>
+
+  <!-- 军帽 -->
+  <path d="M95 42 L102 28 L138 28 L145 42"/>
+  <path d="M90 42 L150 42"/>
+  <path d="M90 42 L92 48 L148 48 L150 42"/>
+  <!-- 帽徽（星） -->
+  <path d="M120 32 L122 37 L127 37 L123 40 L125 45 L120 42 L115 45 L117 40 L113 37 L118 37 Z" fill="#00ff88"/>
+
+  <!-- 头 -->
+  <ellipse cx="120" cy="66" rx="20" ry="22"/>
+
+  <!-- 瞄准的眼睛（一只眯起） -->
+  <path d="M108 62 Q112 60 115 62"/>
+  <path d="M125 60 Q128 60 131 62"/>
+  <circle cx="127.5" cy="61" r="1.2" fill="#00ff88"/>
+  <!-- 左眼眯成一线 -->
+
+  <!-- 严肃嘴 -->
+  <path d="M112 80 L128 80"/>
+
+  <!-- 脖 -->
+  <path d="M114 88 L114 96 M126 88 L126 96"/>
+
+  <!-- 战术背心领 -->
+  <path d="M85 105 Q120 98 155 105"/>
+  <path d="M85 105 L75 115"/>
+  <path d="M155 105 L165 115"/>
+
+  <!-- 战术背心（分格） -->
+  <path d="M75 115 Q70 170 74 220"/>
+  <path d="M165 115 Q170 170 166 220"/>
+  <!-- 战术口袋 -->
+  <rect x="84" y="125" width="25" height="18" rx="1"/>
+  <rect x="131" y="125" width="25" height="18" rx="1"/>
+  <rect x="84" y="150" width="25" height="18" rx="1"/>
+  <rect x="131" y="150" width="25" height="18" rx="1"/>
+  <path d="M84 180 L156 180" opacity="0.5"/>
+
+  <!-- 狙击枪（跨右臂举起） -->
+  <path d="M148 132 L220 95" stroke-width="2.5"/>
+  <!-- 瞄准镜 -->
+  <rect x="185" y="102" width="18" height="10" rx="1" transform="rotate(-27 194 107)"/>
+  <circle cx="202" cy="99" r="2.5"/>
+  <!-- 枪托 -->
+  <path d="M145 135 L135 148 L140 155 L150 142" opacity="0.9"/>
+
+  <!-- 扛枪的右手 -->
+  <path d="M148 135 Q150 130 148 125"/>
+
+  <!-- 左手握弹匣 -->
+  <path d="M85 135 Q82 155 88 175"/>
+  <rect x="85" y="180" width="12" height="20" rx="1"/>
+
+  <!-- 皮带 -->
+  <path d="M75 220 L165 220"/>
+  <rect x="115" y="215" width="10" height="10"/>
+
+  <!-- 裤子 -->
+  <path d="M95 225 L90 285 M145 225 L150 285"/>
+  <!-- 战术靴 -->
+  <path d="M82 285 L98 285 L96 300 L84 300 Z"/>
+  <path d="M142 285 L158 285 L156 300 L144 300 Z"/>
+
+  <!-- 瞄准点 -->
+  <circle cx="220" cy="92" r="3" opacity="0.8"/>
+  <circle cx="220" cy="92" r="1" fill="#00ff88"/>
+
+  <text x="120" y="315" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#00ff88" stroke="none" letter-spacing="2">CMDE · 祈使句机枪手</text>
+</svg>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIBTI · 你的 AI 对话人格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --bg-soft: #13131a;
+    --bg-card: #181822;
+    --border: #252534;
+    --border-hot: #00ff88;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --text-faint: #55556a;
+    --accent: #00ff88;
+    --accent-2: #a855f7;
+    --accent-3: #fbbf24;
+    --danger: #ff4d6d;
+  }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', -apple-system, system-ui, sans-serif; overflow-x: hidden; }
+  body { min-height: 100vh; position: relative; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace; }
+
+  /* 扫描线 & 栅格 */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,255,136,0.02) 0px, rgba(0,255,136,0.02) 1px, transparent 1px, transparent 3px);
+    pointer-events: none; z-index: 1;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at top, rgba(0,255,136,0.08), transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+  .scan {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6; z-index: 2;
+    animation: scan 8s linear infinite;
+  }
+  @keyframes scan {
+    0% { transform: translateY(-10px); }
+    100% { transform: translateY(100vh); }
+  }
+
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 3; }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: rgba(10,10,15,0.75);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; letter-spacing: 1px; }
+  .logo .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--text-dim); }
+  .nav-links a { color: inherit; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .gh-btn, .lang-btn {
+    padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg-soft); color: var(--text); text-decoration: none; font-size: 13px;
+    font-family: 'JetBrains Mono', monospace; transition: all 0.2s;
+  }
+  .gh-btn:hover, .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .lang-btn { letter-spacing: 1px; font-weight: 700; }
+
+  /* Hero */
+  .hero { padding: 120px 0 80px; text-align: center; position: relative; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim);
+    margin-bottom: 32px;
+  }
+  .hero-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  .hero h1 {
+    font-size: clamp(48px, 10vw, 128px);
+    font-weight: 800; letter-spacing: -4px; line-height: 0.95;
+    background: linear-gradient(180deg, #fff 0%, #888 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 24px;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub {
+    font-size: 20px; color: var(--text-dim); max-width: 640px; margin: 0 auto 16px;
+    line-height: 1.6;
+  }
+  .hero-sub .hl { color: var(--accent); font-weight: 500; }
+  .typewriter {
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--accent);
+    margin-top: 40px; min-height: 28px;
+  }
+  .typewriter::after {
+    content: '▊'; animation: blink 1s steps(2) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-cta { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    padding: 14px 28px; border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; text-decoration: none; transition: all 0.2s; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary { background: var(--accent); color: #000; font-weight: 700; }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,255,136,0.3); }
+  .btn-ghost { border: 1px solid var(--border); color: var(--text); background: transparent; }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Section */
+  section { padding: 100px 0; position: relative; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .section-label::before { content: '>'; }
+  .section-title { font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 20px; }
+  .section-desc { font-size: 17px; color: var(--text-dim); max-width: 680px; line-height: 1.7; margin-bottom: 60px; }
+
+  /* 四维 */
+  .dims-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .dim-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .dim-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .dim-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+  }
+  .dim-card:hover::before { transform: scaleX(1); }
+  .dim-letters {
+    font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 800;
+    letter-spacing: -2px; margin-bottom: 8px;
+  }
+  .dim-letters .a { color: var(--accent); }
+  .dim-letters .b { color: var(--accent-2); }
+  .dim-letters .slash { color: var(--text-faint); margin: 0 8px; }
+  .dim-name { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; letter-spacing: 1px; }
+  .dim-poles { display: flex; flex-direction: column; gap: 10px; }
+  .dim-pole { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .dim-pole .tag { font-family: 'JetBrains Mono', monospace; font-weight: 700; width: 18px; }
+  .dim-pole .tag.a { color: var(--accent); }
+  .dim-pole .tag.b { color: var(--accent-2); }
+  .dim-pole .desc { color: var(--text); }
+  .dim-pole .example { color: var(--text-faint); font-size: 13px; margin-left: 6px; font-family: 'JetBrains Mono', monospace; }
+  .dim-cite { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .cite-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-faint); letter-spacing: 2px; margin-bottom: 10px; }
+  .cite-list { display: flex; flex-direction: column; gap: 6px; }
+  .cite-item { font-size: 11px; color: var(--text-dim); line-height: 1.5; font-family: 'JetBrains Mono', monospace; }
+  .cite-item .cite-src { color: var(--accent); font-weight: 600; }
+  .cite-item em { color: var(--text-faint); font-style: italic; }
+
+  /* 16型人格墙 */
+  .personality-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 900px) { .personality-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .personality-grid { grid-template-columns: 1fr; } }
+  .p-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 24px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+    min-height: 220px; display: flex; flex-direction: column;
+  }
+  .p-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,136,0.08), transparent 40%);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .p-card:hover::before { opacity: 1; }
+  .p-card:hover { transform: translateY(-4px); border-color: var(--group-color, var(--accent)); }
+  .p-emoji { font-size: 32px; margin-bottom: 8px; line-height: 1; height: 56px; display: flex; align-items: center; }
+  .p-emoji svg { width: 52px; height: 52px; stroke: var(--group-color); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.4s; }
+  .p-card:hover .p-emoji svg { transform: scale(1.1) rotate(-3deg); }
+  .p-code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+    color: var(--group-color, var(--accent)); letter-spacing: 2px; margin-bottom: 4px;
+  }
+  .p-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .p-slogan { font-size: 13px; color: var(--text-dim); line-height: 1.5; flex: 1; }
+  .p-example {
+    margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint);
+    font-style: italic;
+  }
+  /* 四大阵营用不同配色 */
+  .group-mystic { --group-color: #a855f7; }
+  .group-preacher { --group-color: #fbbf24; }
+  .group-sniper { --group-color: #00ff88; }
+  .group-craftsman { --group-color: #60a5fa; }
+
+  .group-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--group-color); letter-spacing: 3px; text-transform: uppercase;
+    margin: 32px 0 12px; display: flex; align-items: center; gap: 12px;
+  }
+  .group-label::before, .group-label::after {
+    content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--group-color), transparent);
+    opacity: 0.3;
+  }
+  .group-label.group-mystic { --group-color: #a855f7; }
+  .group-label.group-preacher { --group-color: #fbbf24; }
+  .group-label.group-sniper { --group-color: #00ff88; }
+  .group-label.group-craftsman { --group-color: #60a5fa; }
+
+  /* 终端预览 */
+  .terminal {
+    background: #000; border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,255,136,0.1);
+  }
+  .terminal-bar {
+    display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+    background: #111; border-bottom: 1px solid var(--border);
+  }
+  .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .term-dot.r { background: #ff5f57; }
+  .term-dot.y { background: #febc2e; }
+  .term-dot.g { background: #28c840; }
+  .term-title { margin-left: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-faint); }
+  .terminal-body {
+    padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    line-height: 1.7; color: #d0d0d8; white-space: pre; overflow-x: auto;
+  }
+  .terminal-body .cmd { color: var(--accent); }
+  .terminal-body .c-accent { color: var(--accent); }
+  .terminal-body .c-warn { color: var(--accent-3); }
+  .terminal-body .c-dim { color: var(--text-faint); }
+  .terminal-body .c-purple { color: var(--accent-2); }
+  .terminal-body .c-blue { color: #60a5fa; }
+
+  /* 对比区 */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card {
+    padding: 32px; border-radius: 12px; border: 1px solid var(--border);
+  }
+  .compare-card.bad { background: rgba(255,77,109,0.05); border-color: rgba(255,77,109,0.3); }
+  .compare-card.good { background: rgba(0,255,136,0.05); border-color: rgba(0,255,136,0.3); }
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2px;
+    margin-bottom: 16px; text-transform: uppercase;
+  }
+  .compare-card.bad .compare-label { color: var(--danger); }
+  .compare-card.good .compare-label { color: var(--accent); }
+  .compare-title { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .compare-list { list-style: none; }
+  .compare-list li { padding: 8px 0; color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+  .compare-list li::before { margin-right: 10px; }
+  .compare-card.bad .compare-list li::before { content: '✗'; color: var(--danger); }
+  .compare-card.good .compare-list li::before { content: '✓'; color: var(--accent); }
+
+  /* Footer */
+  footer { padding: 60px 0 40px; border-top: 1px solid var(--border); margin-top: 80px; }
+  .footer-content { text-align: center; }
+  .footer-logo { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-dim); margin-bottom: 12px; }
+  .footer-note { color: var(--text-faint); font-size: 13px; }
+  .footer-egg { margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); opacity: 0.6; }
+
+  /* 小屏优化 */
+  @media (max-width: 600px) {
+    .hero { padding: 60px 0 40px; }
+    .nav-links { display: none; }
+    section { padding: 60px 0; }
+  }
+
+  /* 进入动画 */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+  .reveal.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="scan"></div>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="logo"><span class="dot"></span>AIBTI</div>
+    <div class="nav-links">
+      <a href="#dimensions">四维</a>
+      <a href="#personalities">16型</a>
+      <a href="#report">诊断</a>
+      <a href="#philosophy">理念</a>
+    </div>
+    <div class="nav-right">
+      <a href="index.en.html" class="lang-btn">EN</a>
+      <a href="#" class="gh-btn">★ Star</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag"><span class="dot"></span>v0.1.0 · EXPERIMENTAL · 有点意思</div>
+    <h1>你的 <span class="accent">AI 对话</span><br>人格测试</h1>
+    <p class="hero-sub">
+      你以为你在调教 AI，<span class="hl">其实 AI 在看透你</span>。<br>
+      AIBTI 通过你真实的提示词行为，测出你是 16 种 AI 对话人格里的哪一种。
+    </p>
+    <div class="typewriter" id="tw"></div>
+    <div class="hero-cta">
+      <a href="#personalities" class="btn btn-primary">▶ 查看 16 型</a>
+      <a href="#report" class="btn btn-ghost">$ aibti scan</a>
+    </div>
+  </div>
+</section>
+
+<section id="philosophy">
+  <div class="container">
+    <div class="section-label">PHILOSOPHY</div>
+    <h2 class="section-title">行为不会撒谎</h2>
+    <p class="section-desc">
+      MBTI 测你"想成为什么人"，AIBTI 测你"实际是什么人"。<br>
+      问卷会骗人，提示词不会。每一次你敲回车，都是在给自己的人格投票。
+    </p>
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <div class="compare-label">传统 MBTI</div>
+        <div class="compare-title">你答题得到的结果</div>
+        <ul class="compare-list">
+          <li>靠 90 道选择题自陈</li>
+          <li>容易给出"希望中的自己"</li>
+          <li>一测定终身，不随场景变化</li>
+          <li>程序员看了：这不就是星座</li>
+        </ul>
+      </div>
+      <div class="compare-card good">
+        <div class="compare-label">AIBTI</div>
+        <div class="compare-title">你提示词出卖的真相</div>
+        <ul class="compare-list">
+          <li>分析你过去 30 天的真实对话</li>
+          <li>纯行为数据，没法装</li>
+          <li>每周重算，人格会进化</li>
+          <li>附带"针对你"的提示词改进建议</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dimensions">
+  <div class="container">
+    <div class="section-label">DIMENSIONS</div>
+    <h2 class="section-title">四维坐标系</h2>
+    <p class="section-desc">
+      每一条提示词都能拆成四个向量。2⁴ = 16 型人格，你在其中一个坐标上。
+    </p>
+    <div class="dims-grid">
+      <div class="dim-card">
+        <div class="dim-letters"><span class="a">A</span><span class="slash">/</span><span class="b">C</span></div>
+        <div class="dim-name">抽象  ←→  具象</div>
+        <div class="dim-poles">
+          <div class="dim-pole"><span class="tag a">A</span><span class="desc">抽象派<span class="example">"架构该怎么演进"</span></span></div>
+          <div class="dim-pole"><span class="tag b">C</span><span class="desc">具象派<span class="example">"User.java:42 加 getter"</span></span></div>
+        </div>
+        <div class="dim-cite">
+          <div class="cite-label">— BASED ON</div>
+          <div class="cite-list">
+            <div class="cite-item"><span class="cite-src">Anthropic</span> · <em>Be Clear, Direct & Detailed</em></div>
+            <div class="cite-item"><span class="cite-src">OpenAI</span> · <em>Strategy 1: Write Clear Instructions</em></div>
+            <div class="cite-item"><span class="cite-src">Karpathy</span> · "specificity compounds"</div>
+          </div>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-letters"><span class="a">M</span><span class="slash">/</span><span class="b">V</span></div>
+        <div class="dim-name">精简  ←→  详尽</div>
+        <div class="dim-poles">
+          <div class="dim-pole"><span class="tag a">M</span><span class="desc">惜字如金<span class="example">"搞定它"</span></span></div>
+          <div class="dim-pole"><span class="tag b">V</span><span class="desc">上下文狂<span class="example">三段代码 + 需求 + 约束</span></span></div>
+        </div>
+        <div class="dim-cite">
+          <div class="cite-label">— BASED ON</div>
+          <div class="cite-list">
+            <div class="cite-item"><span class="cite-src">Anthropic</span> · <em>Multishot Prompting (Use Examples)</em></div>
+            <div class="cite-item"><span class="cite-src">OpenAI</span> · <em>Strategy 2: Provide Reference Text</em></div>
+            <div class="cite-item"><span class="cite-src">Brown et al. 2020</span> · <em>GPT-3 Few-Shot Learners</em></div>
+          </div>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-letters"><span class="a">D</span><span class="slash">/</span><span class="b">L</span></div>
+        <div class="dim-name">指令  ←→  协作</div>
+        <div class="dim-poles">
+          <div class="dim-pole"><span class="tag a">D</span><span class="desc">祈使句派<span class="example">"把这段改了"</span></span></div>
+          <div class="dim-pole"><span class="tag b">L</span><span class="desc">商量着来<span class="example">"你觉得哪种好"</span></span></div>
+        </div>
+        <div class="dim-cite">
+          <div class="cite-label">— BASED ON</div>
+          <div class="cite-list">
+            <div class="cite-item"><span class="cite-src">Karpathy</span> · "LLM is a junior collaborator, not an oracle"</div>
+            <div class="cite-item"><span class="cite-src">Yao et al. 2022</span> · <em>ReAct: Reasoning + Acting</em></div>
+            <div class="cite-item"><span class="cite-src">Anthropic</span> · <em>Role Prompting / System Prompts</em></div>
+          </div>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-letters"><span class="a">X</span><span class="slash">/</span><span class="b">E</span></div>
+        <div class="dim-name">探索  ←→  执行</div>
+        <div class="dim-poles">
+          <div class="dim-pole"><span class="tag a">X</span><span class="desc">先问路<span class="example">"有什么方案"</span></span></div>
+          <div class="dim-pole"><span class="tag b">E</span><span class="desc">直接干<span class="example">"做就完了"</span></span></div>
+        </div>
+        <div class="dim-cite">
+          <div class="cite-label">— BASED ON</div>
+          <div class="cite-list">
+            <div class="cite-item"><span class="cite-src">Wei et al. 2022</span> · <em>Chain-of-Thought Prompting</em></div>
+            <div class="cite-item"><span class="cite-src">OpenAI</span> · <em>Strategy 3: Split Complex Tasks</em></div>
+            <div class="cite-item"><span class="cite-src">Yao et al. 2023</span> · <em>Tree of Thoughts</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="personalities">
+  <div class="container">
+    <div class="section-label">16 PERSONALITIES</div>
+    <h2 class="section-title">你是哪一型？</h2>
+    <p class="section-desc">
+      四大阵营，每阵营四型。移到卡片上看典型提示词。
+    </p>
+
+    <div class="group-label group-mystic">🌫 玄学派 · 抽象 + 精简</div>
+    <div class="personality-grid">
+      <div class="p-card group-mystic">
+        <div class="p-emoji">🤲</div>
+        <div class="p-code">AMDE</div>
+        <div class="p-name">甩锅侠</div>
+        <div class="p-slogan">搞定它，别问我怎么搞。</div>
+        <div class="p-example">"修一下" · "搞定"</div>
+      </div>
+      <div class="p-card group-mystic">
+        <div class="p-emoji">🌙</div>
+        <div class="p-code">AMDX</div>
+        <div class="p-name">凌晨哲学家</div>
+        <div class="p-slogan">三点钟灵魂拷问 AI 的人生走向。</div>
+        <div class="p-example">"架构该怎么演进"</div>
+      </div>
+      <div class="p-card group-mystic">
+        <div class="p-emoji">🧘</div>
+        <div class="p-code">AMLE</div>
+        <div class="p-name">佛系甲方</div>
+        <div class="p-slogan">不指挥也不参与，不好再说。</div>
+        <div class="p-example">"有啥建议吗，你决定"</div>
+      </div>
+      <div class="p-card group-mystic">
+        <div class="p-emoji">🔮</div>
+        <div class="p-code">AMLX</div>
+        <div class="p-name">碎碎念诗人</div>
+        <div class="p-slogan">想法朦胧，句句都是气口。</div>
+        <div class="p-example">"有没有更优雅的方式……"</div>
+      </div>
+    </div>
+
+    <div class="group-label group-preacher">📜 布道派 · 抽象 + 详尽</div>
+    <div class="personality-grid">
+      <div class="p-card group-preacher">
+        <div class="p-emoji">👑</div>
+        <div class="p-code">AVDE</div>
+        <div class="p-name">PRD 暴君</div>
+        <div class="p-slogan">三页文档，配一句"做"。</div>
+        <div class="p-example">长背景 + "下周五上线"</div>
+      </div>
+      <div class="p-card group-preacher">
+        <div class="p-emoji">🎤</div>
+        <div class="p-code">AVDX</div>
+        <div class="p-name">战略 PPT 家</div>
+        <div class="p-slogan">铺完上下文再发问，像融资路演。</div>
+        <div class="p-example">"基于以上，我们该怎么走"</div>
+      </div>
+      <div class="p-card group-preacher">
+        <div class="p-emoji">⛪</div>
+        <div class="p-code">AVLE</div>
+        <div class="p-name">架构布道士</div>
+        <div class="p-slogan">讲一堆概念，然后"我们一起干"。</div>
+        <div class="p-example">"基于 DDD 思想，我们重构吧"</div>
+      </div>
+      <div class="p-card group-preacher">
+        <div class="p-emoji">📝</div>
+        <div class="p-code">AVLX</div>
+        <div class="p-name">小作文 PM</div>
+        <div class="p-slogan">小作文铺垫 + 三选一选择题。</div>
+        <div class="p-example">"A/B/C 哪种更合适"</div>
+      </div>
+    </div>
+
+    <div class="group-label group-sniper">🎯 狙击派 · 具象 + 精简</div>
+    <div class="personality-grid">
+      <div class="p-card group-sniper">
+        <div class="p-emoji">🔫</div>
+        <div class="p-code">CMDE</div>
+        <div class="p-name">祈使句机枪手</div>
+        <div class="p-slogan">精准定位，精准开火，效率之王。</div>
+        <div class="p-example">"User.java:42 加 getter"</div>
+      </div>
+      <div class="p-card group-sniper">
+        <div class="p-emoji">🔍</div>
+        <div class="p-code">CMDX</div>
+        <div class="p-name">Bug 侦探</div>
+        <div class="p-slogan">拿证据问案情，不下结论。</div>
+        <div class="p-example">"这行为啥报 NPE"</div>
+      </div>
+      <div class="p-card group-sniper">
+        <div class="p-emoji">🤝</div>
+        <div class="p-code">CMLE</div>
+        <div class="p-name">结对搭子</div>
+        <div class="p-slogan">边写边聊，像坐你旁边的同事。</div>
+        <div class="p-example">"来，把这段改一下"</div>
+      </div>
+      <div class="p-card group-sniper">
+        <div class="p-emoji">🆘</div>
+        <div class="p-code">CMLX</div>
+        <div class="p-name">卡点求助侠</div>
+        <div class="p-slogan">卡哪问哪，单点小问题。</div>
+        <div class="p-example">"这里报错咋办"</div>
+      </div>
+    </div>
+
+    <div class="group-label group-craftsman">🔨 工匠派 · 具象 + 详尽</div>
+    <div class="personality-grid">
+      <div class="p-card group-craftsman">
+        <div class="p-emoji">💼</div>
+        <div class="p-code">CVDE</div>
+        <div class="p-name">甲方爸爸</div>
+        <div class="p-slogan">完整代码 + 完整需求 + "做完给我"。</div>
+        <div class="p-example">附三段代码 + "重构这里"</div>
+      </div>
+      <div class="p-card group-craftsman">
+        <div class="p-emoji">🛰️</div>
+        <div class="p-code">CVDX</div>
+        <div class="p-name">技术侦察兵</div>
+        <div class="p-slogan">把战场讲清楚，问最优打法。</div>
+        <div class="p-example">贴架构图 + "有优化空间吗"</div>
+      </div>
+      <div class="p-card group-craftsman">
+        <div class="p-emoji">🎓</div>
+        <div class="p-code">CVLE</div>
+        <div class="p-name">技术导师</div>
+        <div class="p-slogan">耐心给上下文，陪你一起干。</div>
+        <div class="p-example">贴代码 + "我们一步步来"</div>
+      </div>
+      <div class="p-card group-craftsman">
+        <div class="p-emoji">🏛️</div>
+        <div class="p-code">CVLX</div>
+        <div class="p-name">苏格拉底码农</div>
+        <div class="p-slogan">详细背景 + 多轮追问到底。</div>
+        <div class="p-example">"为啥不用 X？那 Y 呢？Z 呢？"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="report">
+  <div class="container">
+    <div class="section-label">REPORT</div>
+    <h2 class="section-title">本周人格报告</h2>
+    <p class="section-desc">
+      扫描你 Claude Code / Cursor / ChatGPT 的本地日志，生成一份专属诊断。<br>
+      数据不离开你的电脑。
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot r"></div>
+        <div class="term-dot y"></div>
+        <div class="term-dot g"></div>
+        <div class="term-title">~ $ aibti scan</div>
+      </div>
+      <div class="terminal-body"><span class="cmd">$ aibti scan</span> <span class="c-dim">~/.claude/projects</span>
+
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  AIBTI 本周人格报告  <span class="c-accent">2026-W16</span>
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+  你这周是： 🎯 <span class="c-accent">【深夜祈使句机枪手】</span>
+            <span class="c-accent">CMDE</span> · 具象·精简·指令·执行
+
+  <span class="c-dim">"不废话，打哪指哪，但经常忘记告诉队友目标在哪。"</span>
+
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  行为速写
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  · 总条数:       <span class="c-accent">2,847</span> 条  <span class="c-warn">🔥 本月 TOP 5%</span>
+  · 黄金时段:     <span class="c-purple">23:00 – 02:00</span>  (占 61%)
+  · 平均长度:     <span class="c-accent">28</span> tokens  <span class="c-dim">(简洁到吝啬)</span>
+  · 最常说的话:   <span class="c-blue">"改一下"</span>  × 134
+  · 最长对话:     <span class="c-warn">47 轮</span>  <span class="c-dim">(4-12 那次差点砸键盘)</span>
+
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  本周成就 🏆
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="c-accent">✓</span> 【凌晨三点俱乐部】连续 5 天 3 点后提问
+  <span class="c-accent">✓</span> 【极简主义者】单条提示词 ≤10 字 达成 50 次
+  <span class="c-warn">✗</span> 【上下文之神】提供文件路径率 > 80%  <span class="c-dim">(当前 12%)</span>
+
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  诊断 · 干货部分
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="c-warn">1.</span> 47% 提示词没给路径 → AI 反复问你
+  <span class="c-warn">2.</span> 修改类任务 62% 没说目标 → 改完不是你想要的
+  <span class="c-warn">3.</span> 3+ 轮后 78% 说"算了我自己来" → 建议先写 PLAN
+
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  人格进化轨迹
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  03 月:   🎓 <span class="c-blue">CVLX</span>  苏格拉底码农
+  04 月初: 📝 <span class="c-warn">AVLX</span>  小作文 PM
+  本周:    🎯 <span class="c-accent">CMDE</span>  祈使句机枪手  <span class="c-dim">← 你在变快，但在变急</span>
+
+<span class="c-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="c-dim">  建议: 下周试试 "CMDE + 补一句目标" 混合模式</span>
+<span class="c-accent">  $ aibti tips --for CMDE</span>
+</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="text-align:center;">
+    <div class="section-label" style="justify-content:center;">GET STARTED</div>
+    <h2 class="section-title">一行命令，认识自己</h2>
+    <p class="section-desc" style="margin: 0 auto 40px;">全本地运行，不上传任何对话内容。</p>
+    <div class="terminal" style="max-width: 600px; margin: 0 auto; text-align: left;">
+      <div class="terminal-bar">
+        <div class="term-dot r"></div>
+        <div class="term-dot y"></div>
+        <div class="term-dot g"></div>
+        <div class="term-title">install.sh</div>
+      </div>
+      <div class="terminal-body" style="white-space: pre-wrap;"><span class="c-dim"># 安装（计划中）</span>
+<span class="cmd">$ npx aibti</span>
+
+<span class="c-dim"># 或者全局装</span>
+<span class="cmd">$ npm i -g aibti</span>
+<span class="cmd">$ aibti scan</span>
+
+<span class="c-dim"># 改天的事，先画饼 🥠</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-content">
+    <div class="footer-logo">◉ AIBTI · v0.1.0-alpha</div>
+    <div class="footer-note">Made with ☕ and 凌晨三点的疑问 · Not affiliated with MBTI®</div>
+    <div class="footer-egg">// 如果你读到这里了，你大概率是 CVLX 苏格拉底码农</div>
+  </div>
+</footer>
+
+<script>
+  // 16 型 SVG 图标（线稿，跟随 group-color）
+  const ICONS = {
+    AMDE: '<svg viewBox="0 0 24 24"><circle cx="8" cy="6" r="2"/><path d="M6 8 L6 14 M10 8 L10 14"/><path d="M6 14 L5 22 M10 14 L11 22"/><path d="M10 9 L15 6"/><circle cx="18" cy="4" r="1.2"/><path d="M15 6 L18 4" stroke-dasharray="1.5 1.5"/></svg>',
+    AMDX: '<svg viewBox="0 0 24 24"><path d="M22 8a4 4 0 1 1-3.5-5a3 3 0 0 0 3.5 5z"/><circle cx="7" cy="11" r="2.3"/><path d="M4 14 Q2 19 5 21 L11 21 Q14 19 13 14"/><path d="M9 10 L11 8"/><circle cx="13" cy="7.5" r="0.4" fill="currentColor"/><circle cx="15" cy="5" r="0.6" fill="currentColor"/></svg>',
+    AMLE: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="3" rx="3" ry="0.6"/><circle cx="12" cy="6" r="2"/><path d="M10 8 L8 13 M14 8 L16 13"/><path d="M5 19 L19 19"/><path d="M8 13 L7 19 M16 13 L17 19"/><path d="M9 17 L11 15 M15 17 L13 15"/></svg>',
+    AMLX: '<svg viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><path d="M4 7 L4 14 M8 7 L8 14"/><path d="M4 14 L3 22 M8 14 L9 22"/><path d="M8 11 L13 14"/><circle cx="15" cy="16" r="3"/><path d="M13 15 Q15 16 17 15"/></svg>',
+    AVDE: '<svg viewBox="0 0 24 24"><path d="M5 5 L6 3 L8 4 L10 2 L12 4 L13 3 L13 6 L5 6Z"/><circle cx="9" cy="8" r="1.5"/><path d="M7 9.5 L7 16 M11 9.5 L11 16"/><path d="M11 12 L15 12"/><rect x="15" y="9" width="6" height="9" rx="0.5"/><path d="M16 12 L20 12 M16 14 L20 14 M16 16 L19 16"/><path d="M7 16 L6 22 M11 16 L12 22"/></svg>',
+    AVDX: '<svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="2"/><path d="M7 8 L7 14 M11 8 L11 14"/><path d="M11 10 L14 11"/><rect x="14" y="9" width="2.5" height="4" rx="1" transform="rotate(40 15.25 11)"/><path d="M7 14 L6 22 M11 14 L12 22"/></svg>',
+    AVLE: '<svg viewBox="0 0 24 24"><path d="M12 1 L12 3 M11 2 L13 2"/><circle cx="12" cy="6" r="2"/><path d="M10 8 L10 14 M14 8 L14 14"/><path d="M5 11 L19 11"/><path d="M10 14 L8 22 M14 14 L16 22"/></svg>',
+    AVLX: '<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><path d="M4 8 L4 14 M8 8 L8 14"/><rect x="10" y="6" width="11" height="11" rx="0.5"/><path d="M12 9 L19 9 M12 12 L19 12 M12 15 L17 15"/><path d="M4 14 L3 22 M8 14 L9 22"/></svg>',
+    CMDE: '<svg viewBox="0 0 24 24"><path d="M5 6 L6.5 3 L10.5 3 L11 6"/><circle cx="8" cy="8.5" r="2.3"/><path d="M6.5 11 L6.5 16 M9.5 11 L9.5 16"/><path d="M8 11 L20 5"/><circle cx="20" cy="5" r="0.9"/><path d="M6.5 16 L5 22 M9.5 16 L11 22"/></svg>',
+    CMDX: '<svg viewBox="0 0 24 24"><path d="M4 5 L6 3 L9 3 L11 5"/><circle cx="7" cy="7" r="2"/><path d="M5 9 L5 14 M9 9 L9 14"/><path d="M9 11 L12 14"/><circle cx="15" cy="17" r="2.5"/><path d="M5 14 L4 22 M9 14 L10 22"/></svg>',
+    CMLE: '<svg viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><path d="M4 7 L4 14 M8 7 L8 14"/><path d="M16 7 L16 14 M20 7 L20 14"/><path d="M8 10 L16 10"/><path d="M4 14 L3 22 M8 14 L9 22"/><path d="M16 14 L15 22 M20 14 L21 22"/></svg>',
+    CMLX: '<svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="2"/><path d="M7 8 L7 14 M11 8 L11 14"/><path d="M11 9 L15 4"/><path d="M15 4 L15 2"/><circle cx="15" cy="1" r="0.5" fill="currentColor"/><path d="M7 14 L6 22 M11 14 L12 22"/></svg>',
+    CVDE: '<svg viewBox="0 0 24 24"><circle cx="8" cy="5" r="2"/><path d="M6 7 L6 14 M10 7 L10 14"/><path d="M10 10 L14 11"/><rect x="14" y="11" width="7" height="6" rx="0.5"/><path d="M16 11 L16 9 L19 9 L19 11"/><path d="M14 14 L21 14"/><path d="M6 14 L5 22 M10 14 L11 22"/></svg>',
+    CVDX: '<svg viewBox="0 0 24 24"><circle cx="8" cy="6" r="2"/><path d="M6 8 L6 14 M10 8 L10 14"/><path d="M10 10 L14 9"/><rect x="13" y="7" width="6" height="3.5" rx="0.5" transform="rotate(20 16 9)"/><path d="M19 8 L21 7"/><path d="M6 14 L5 22 M10 14 L11 22"/></svg>',
+    CVLE: '<svg viewBox="0 0 24 24"><path d="M3 6 L13 6 L13 7 L3 7Z"/><path d="M11 7 L11 4"/><circle cx="11" cy="3.5" r="0.5" fill="currentColor"/><circle cx="8" cy="9" r="2"/><path d="M6 11 L6 16 M10 11 L10 16"/><path d="M10 13 L17 13 L17 18"/><path d="M6 16 L5 22 M10 16 L11 22"/></svg>',
+    CVLX: '<svg viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><path d="M4 7 L4 14 M8 7 L8 14"/><path d="M8 10 L12 10"/><path d="M14 5 L20 5 M14 19 L20 19"/><path d="M15 7 L15 17 M17 7 L17 17 M19 7 L19 17"/><path d="M4 14 L3 22 M8 14 L9 22"/></svg>',
+  };
+
+  document.querySelectorAll('.p-card').forEach(card => {
+    const code = card.querySelector('.p-code')?.textContent.trim();
+    const slot = card.querySelector('.p-emoji');
+    if (code && ICONS[code] && slot) slot.innerHTML = ICONS[code];
+  });
+
+  // 打字机
+  const lines = [
+    '> 正在分析你的 2,847 条提示词...',
+    '> 检测到 "改一下" 出现 134 次',
+    '> 你的人格匹配度: CMDE 祈使句机枪手 87%',
+    '> 警告: 47% 提示词缺少上下文',
+    '> 你上周试图甩锅给 AI 5 次',
+  ];
+  const el = document.getElementById('tw');
+  let i = 0, j = 0, forward = true;
+  function tick() {
+    const line = lines[i];
+    if (forward) {
+      el.textContent = line.slice(0, j++);
+      if (j > line.length) { forward = false; setTimeout(tick, 1800); return; }
+    } else {
+      el.textContent = line.slice(0, j--);
+      if (j < 0) { forward = true; i = (i + 1) % lines.length; }
+    }
+    setTimeout(tick, forward ? 40 : 20);
+  }
+  tick();
+
+  // 卡片 hover 光晕跟随
+  document.querySelectorAll('.p-card').forEach(c => {
+    c.addEventListener('mousemove', e => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      c.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+
+  // IntersectionObserver 滚动显现
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => e.isIntersecting && e.target.classList.add('show'));
+  }, { threshold: 0.1 });
+  document.querySelectorAll('section').forEach(s => { s.classList.add('reveal'); io.observe(s); });
+</script>
+
+</body>
+</html>

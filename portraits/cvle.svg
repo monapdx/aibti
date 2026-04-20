@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="120" cy="155" r="135" stroke-dasharray="2 8" opacity="0.15"/>
+  <circle cx="120" cy="155" r="108" stroke-dasharray="1 6" opacity="0.25"/>
+
+  <!-- 学士帽 -->
+  <path d="M75 35 L165 35 L165 40 L75 40 Z"/>
+  <path d="M90 35 L120 22 L150 35"/>
+  <!-- 流苏 -->
+  <path d="M160 40 L162 50"/>
+  <circle cx="162" cy="52" r="1.5" fill="#60a5fa"/>
+  <path d="M160 52 L164 60" opacity="0.7"/>
+
+  <!-- 头 -->
+  <ellipse cx="120" cy="65" rx="20" ry="22"/>
+
+  <!-- 眼镜 -->
+  <rect x="106" y="60" width="10" height="7" rx="1"/>
+  <rect x="124" y="60" width="10" height="7" rx="1"/>
+  <path d="M116 63 L124 63"/>
+
+  <!-- 温和微笑 -->
+  <path d="M112 80 Q120 85 128 80"/>
+
+  <!-- 脖 -->
+  <path d="M114 88 L114 97 M126 88 L126 97"/>
+
+  <!-- 学士服领子 -->
+  <path d="M85 106 Q120 98 155 106"/>
+  <!-- 颈巾（学位条带） -->
+  <path d="M108 106 L108 210"/>
+  <path d="M132 106 L132 210"/>
+  <path d="M108 170 L132 170" opacity="0.4"/>
+
+  <!-- 学士服宽袖 -->
+  <path d="M85 106 Q65 130 72 170 L88 180"/>
+  <path d="M155 106 Q175 130 168 170 L152 180"/>
+
+  <!-- 身体 -->
+  <path d="M88 180 Q80 230 82 275"/>
+  <path d="M152 180 Q160 230 158 275"/>
+
+  <!-- 讲解的手势（右手抬起指点） -->
+  <path d="M152 180 L170 150"/>
+  <circle cx="170" cy="148" r="3"/>
+  <!-- 食指指出 -->
+  <path d="M172 145 L178 140" opacity="0.8"/>
+
+  <!-- 左手抱书 -->
+  <path d="M88 180 Q75 195 80 220"/>
+  <rect x="65" y="215" width="30" height="40" rx="1"/>
+  <!-- 书页 -->
+  <path d="M80 215 L80 255" opacity="0.4"/>
+  <path d="M70 225 L90 225 M70 232 L90 232 M70 239 L85 239" opacity="0.5"/>
+
+  <!-- 下摆 -->
+  <path d="M82 275 L78 295 M158 275 L162 295"/>
+
+  <!-- 头顶知识符号 -->
+  <text x="35" y="100" font-size="14" stroke="none" fill="#60a5fa" opacity="0.5">📚</text>
+  <text x="195" y="90" font-size="14" stroke="none" fill="#60a5fa" opacity="0.5">💡</text>
+  <circle cx="55" cy="130" r="1" fill="#60a5fa" opacity="0.6"/>
+
+  <text x="120" y="313" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#60a5fa" stroke="none" letter-spacing="2">CVLE · 技术导师</text>
+</svg>

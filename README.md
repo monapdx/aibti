@@ -18,6 +18,47 @@
 
 </div>
 
+## ⚡ Try in 30 seconds
+
+```bash
+curl -sL https://raw.githubusercontent.com/leefufufufufu-rgb/aibti/main/install.sh | bash
+```
+
+Then in Claude Code, just say:
+
+```
+Analyze my AIBTI       # English
+测一下我的 AIBTI        # 中文
+```
+
+That's it. You'll get a personality report based on your real prompts from the last 7 days.
+
+**No signup · No API key · No network · No server.**
+
+<details>
+<summary>Prefer manual install? Click to expand.</summary>
+
+```bash
+# 1. Create skill directory
+mkdir -p ~/.claude/skills/aibti
+
+# 2. Download skill file
+curl -sL https://raw.githubusercontent.com/leefufufufufu-rgb/aibti/main/skills/aibti/SKILL.md \
+  -o ~/.claude/skills/aibti/SKILL.md
+
+# 3. Restart Claude Code, then say "Analyze my AIBTI"
+```
+
+Or clone the whole repo as a plugin:
+```bash
+git clone https://github.com/leefufufufufu-rgb/aibti.git ~/.claude/plugins/aibti
+ln -s ~/.claude/plugins/aibti/skills/aibti ~/.claude/skills/aibti
+```
+
+</details>
+
+---
+
 ## 🔒 Privacy Manifesto (read this first)
 
 ```

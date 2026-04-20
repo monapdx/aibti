@@ -115,24 +115,24 @@ date +%z   # 输出 +0800 / -0500 / +0000 等
 #### A/C — Specificity（明确度）
 - **A 抽象**：概念层讨论，没指向具体代码位置或产物规格。讨论/创造/战略大多是 A
 - **C 具象**：含具体文件/行号/函数/具体产物描述
-- 👉 *依据：Anthropic《Be Clear & Direct》· **Karpathy 2024《Software 3.0》** · **Anthropic 2025《Claude Code Best Practices》** · 完整理论链见 [THEORY.md](../../THEORY.md)*
+- 👉 *依据：Anthropic《Be Clear & Direct》(foundational) · **Karpathy 2025.02《Vibe Coding》** · **Anthropic 2026.01《Claude 4.7 Skills System》** · 完整链见 [THEORY.md](../../THEORY.md)*
 
 #### M/V — Context Provision（上下文丰度）
 - **M 精简**：< 60 字，无代码块，用户假设 AI 能从对话记忆里拿上下文
 - **V 详尽**：> 200 字 或含代码块 / 需求规格 / 多步骤说明
-- 👉 *依据：Brown 2020《GPT-3 Few-Shot》· **Liu 2023《Lost in the Middle》** · **Anthropic 2025《Effective Context Engineering》***
+- 👉 *依据：Brown《Few-Shot Learners》(foundational) · **Liu 2023《Lost in the Middle》** · **Anthropic 2026.01《Claude 4.7 · 1M Context》***
 
 #### D/L — Interaction Mode（交互模式）
 - **D 指令**：祈使句让 AI 执行 + 不留商量余地
 - **L 协作**：疑问句 / 征求意见 / 讨论语气 / 开放式 / "你觉得..."
 - 👉 **关键**：讨论类、创造类、战略类大多数时候是 L（用户在和 AI 对话，不是单向命令）
-- 👉 *依据：Yao 2022《ReAct》· **Anthropic 2024.12《Building Effective Agents》** · **MCP 2024 · Model Context Protocol***
+- 👉 *依据：Yao《ReAct》(foundational) · **Anthropic 2025.10《Claude Skills System》** · **Anthropic 2025《MCP 2.0》***
 
 #### X/E — Decomposition & Verification（探索 vs 执行）
 - **X 探索**：问方案、比较选项、讨论可能性、提出疑问（"可行吗？"、"有没有更好的方式？"）
 - **E 执行**：直接要结果，不探索选项
 - 👉 **关键**：讨论类、创造类大部分是 X；纯指令类大部分是 E
-- 👉 *依据：Wei 2022《Chain-of-Thought》· **OpenAI 2024.09《o1 System Card》** · **DeepSeek 2025《R1》** · **Anthropic 2025《Extended Thinking》***
+- 👉 *依据：Wei《Chain-of-Thought》(foundational) · **DeepSeek 2025.01《R1》** · **Anthropic 2026《Extended Thinking v2》***
 
 ### 3.5 · Token 成本保护（重要！避免烧钱）
 
@@ -294,24 +294,69 @@ date +%z   # 输出 +0800 / -0500 / +0000 等
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-## 🎨 Step 7 · 生成可视化 HTML 报告（最后一步，必做）
+## 🎨 Step 7 · 生成可视化 HTML 报告 + 自动打开（v0.3.0 叙事版）
 
-每次生成终端报告后，**还要额外渲染一份漂亮的 HTML 报告**到 `~/.aibti/report.html`（覆盖上次）。这是用户分享、截图、保留的主要产物。
+每次生成终端报告后，**额外生成一份叙事型 HTML 报告**到 `~/.aibti/report.html`（覆盖上次），并**自动用系统默认浏览器打开**。
 
 ### 步骤
 
-1. 检查模板存在：`~/.aibti/report-template.html`
-   - 不存在时提示用户：`curl -sL https://raw.githubusercontent.com/leefufufufufu-rgb/aibti/main/install.sh | bash` 重新安装即可
-2. 检查立绘存在：`~/.aibti/portraits/` 下应有 16 个 SVG
-3. 读取模板内容
-4. **按下方占位符表逐个替换真实数据**
-5. 用 `Write` 工具写入 `~/.aibti/report.html`
-6. 终端最后一行提示用户：
-   - macOS: `open ~/.aibti/report.html`
-   - Linux: `xdg-open ~/.aibti/report.html`
-   - Windows: `start %USERPROFILE%\.aibti\report.html`
+1. 检查 `~/.aibti/report-template.html` 存在（不在提示用户 `curl ... install.sh | bash`）
+2. 检查 `~/.aibti/portraits/` 有 16 个 SVG
+3. **检测用户语言**：根据用户的 prompt 和历史主要语言判断 `zh` 或 `en`
+4. **决定叙事 tone**（重要 — 让 Claude 自主选）：读完用户真实 prompt 样本后，挑一个最匹配的基调：
+   - **吐槽型**：如果用户 prompt 里有自嘲、笑点、轻松气息
+   - **文艺型**：如果用户 prompt 里有感性、哲思、朦胧表达
+   - **哲学型**：如果用户 prompt 有战略/元问题倾向
+   - **朋友聊天型**：如果用户 prompt 直接、日常、平实
+   - 不要套路化——**读他的 prompt 再决定怎么说话**
+5. 读取模板内容
+6. **按占位符表替换**（i18n + 叙事）
+7. 用 `Write` 工具写入 `~/.aibti/report.html`
+8. **必须执行 Bash 自动打开**：
+   ```bash
+   # macOS
+   open ~/.aibti/report.html
+   # Linux
+   xdg-open ~/.aibti/report.html 2>/dev/null &
+   # Windows
+   start "" "%USERPROFILE%\.aibti\report.html"
+   ```
+   用 `uname` 判断系统后执行对应命令，**不要只给提示文字**。
 
-### 占位符替换表（严格按此填）
+### 占位符替换表（v0.3.0 · 严格按此填）
+
+#### i18n 静态文本占位符（根据 LANG 填对应语言）
+
+| 占位符 | 中文 | English |
+|---|---|---|
+| `{{T_LEGENDARY}}` | 传说解锁 | LEGENDARY UNLOCKED |
+| `{{T_S_TIER}}` | S 级 | S-TIER |
+| `{{T_OPENING}}` | 本周故事 | THIS WEEK'S STORY |
+| `{{T_ONE_PROMPT}}` | 最能代表你的那句话 | THE ONE PROMPT |
+| `{{T_FOUR_DIMENSIONS}}` | 四维画像 | FOUR DIMENSIONS |
+| `{{T_ABSTRACT}}` | 抽象 | Abstract |
+| `{{T_CONCRETE}}` | 具象 | Concrete |
+| `{{T_MINIMAL}}` | 精简 | Minimal |
+| `{{T_VERBOSE}}` | 详尽 | Verbose |
+| `{{T_DIRECTIVE}}` | 指令 | Directive |
+| `{{T_COLLAB}}` | 协作 | Collaborative |
+| `{{T_EXPLORE}}` | 探索 | Explore |
+| `{{T_EXECUTE}}` | 执行 | Execute |
+| `{{T_PROMPTS}}` | 总 PROMPT | PROMPTS |
+| `{{T_PEAK_HOUR}}` | 黄金时段 | PEAK HOUR |
+| `{{T_MEDIAN}}` | 长度中位数 | MEDIAN LEN |
+| `{{T_NIGHT_RATIO}}` | 凌晨占比 | NIGHT RATIO |
+| `{{T_LONGEST}}` | 最长一轮 | LONGEST THREAD |
+| `{{T_RANK_TITLE}}` | 16 型 TOP 6 | 16 TYPES · TOP 6 |
+| `{{T_BADGES_TITLE}}` | 解锁徽章 | UNLOCKED BADGES |
+| `{{T_LETTER_TITLE}}` | AI 写给你的一封信 | A LETTER TO YOU |
+| `{{T_FROM_AI}}` | 来自 AI · {{REPORT_DATE}} | FROM AI · {{REPORT_DATE}} |
+| `{{T_LOCAL_ONLY}}` | 100% 本地 · 零上传 | 100% local · zero telemetry |
+| `{{T_WEBSITE}}` | 官网 | Website |
+| `{{T_PRIVACY}}` | 隐私 | Privacy |
+| `{{T_FOOTER_NOTE}}` | 这份报告是你的。没人能看到。随时删：`rm ~/.aibti/report.html` | This report is yours. No one else sees it. Delete anytime: `rm ~/.aibti/report.html` |
+
+#### 数据占位符
 
 | 占位符 | 内容来源 |
 |---|---|
@@ -349,6 +394,29 @@ date +%z   # 输出 +0800 / -0500 / +0000 等
 | `{{SECONDARY_DISPLAY}}` | 有副人格 `block`，无则 `none` |
 | `{{SECONDARY_*}}` | 副人格对应字段 |
 | `{{PEAK_HOUR}}` / `{{MEDIAN_LEN}}` / 等 | 行为统计 |
+
+#### 叙事内容占位符（v0.3.0 新增 · 核心灵魂）
+
+| 占位符 | 要求 |
+|---|---|
+| `{{OPENING_HEADLINE}}` | 一行 20-40 字，用真实数据讲故事。例："你凌晨和 AI 对话了 8 次，每次都问同一个问题" |
+| `{{OPENING_STORY_HTML}}` | 3-4 段 `<p>` 标签，每段 2-3 句。用真实数字、真实项目名、真实 prompt 编成微型叙事。**风格由你根据用户 prompt 决定**（吐槽/文艺/哲学/朋友） |
+| `{{ONE_PROMPT_TEXT}}` | **挑 1 条最代表用户的真实 prompt**，原文引用（脱敏后） |
+| `{{ONE_PROMPT_META}}` | 时间 + 项目 · 例："2026-04-18 03:12 · demand-center" |
+| `{{ONE_PROMPT_PUNCHLINE}}` | 一句锋利的评论（基于你自主选的 tone） |
+| `{{DIM_AC_PUNCHLINE}}` | 每维一句 punchline，不只是数字解读 |
+| `{{DIM_MV_PUNCHLINE}}` / `{{DIM_DL_PUNCHLINE}}` / `{{DIM_XE_PUNCHLINE}}` | 同上 |
+| `{{LETTER_SALUTATION}}` | "亲爱的 {{MAIN_NAME}}：" 或 "Dear {{MAIN_NAME}}," |
+| `{{LETTER_BODY_HTML}}` | 4-6 段 `<p>`，200-300 字。AI 给用户写的一封信——基于真实数据 + 人格特征 + 成长建议。**要有情感**，不要流水账 |
+| `{{LETTER_SIGNATURE}}` | "— Claude · 2026-04-20" 或类似 |
+
+### 关键原则（叙事部分）
+
+1. **每段都用真实数据或真实 prompt 支撑**，不捏造
+2. **风格由你读完样本后自主决定**，不要每份报告都像同一个模板
+3. **Growth Letter 是灵魂**——用户读完会有"这 AI 懂我"的触感
+4. **Punchline 要锋利**，像 The Atlantic 或 The New Yorker 那种一句话概括
+5. **中文用户出中文**，英文用户出英文，不要混
 
 ### 硬约束
 

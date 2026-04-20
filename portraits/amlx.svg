@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 光环层 -->
+  <circle cx="120" cy="155" r="135" stroke-dasharray="2 8" opacity="0.15"/>
+  <circle cx="120" cy="155" r="108" stroke-dasharray="1 6" opacity="0.25"/>
+
+  <!-- 左上灯泡（灵感） -->
+  <g opacity="0.7">
+    <path d="M48 28 Q48 20 56 20 Q64 20 64 28 Q64 33 60 36 L60 40 L52 40 L52 36 Q48 33 48 28z"/>
+    <path d="M52 43 L60 43 M53 46 L59 46"/>
+    <path d="M56 14 L56 11 M44 22 L41 20 M68 22 L71 20"/>
+  </g>
+
+  <!-- 右上星点（碎念） -->
+  <g opacity="0.7">
+    <path d="M194 32 L196 26 L198 32 L204 34 L198 36 L196 42 L194 36 L188 34 Z"/>
+    <circle cx="215" cy="22" r="1.5" fill="#a855f7"/>
+    <circle cx="208" cy="45" r="1" fill="#a855f7"/>
+    <circle cx="225" cy="38" r="0.8" fill="#a855f7"/>
+  </g>
+
+  <!-- 右侧问号气泡 -->
+  <g>
+    <ellipse cx="205" cy="105" rx="16" ry="13"/>
+    <path d="M200 101 Q202 97 205 97 Q208 97 208 101 Q208 104 205 106 L205 108"/>
+    <circle cx="205" cy="112" r="0.8" fill="#a855f7"/>
+    <path d="M195 117 L193 122" opacity="0.5"/>
+    <circle cx="191" cy="125" r="1.2" opacity="0.5" fill="#a855f7"/>
+  </g>
+
+  <!-- 头发（轻微凌乱上翘） -->
+  <path d="M94 44 Q92 32 100 30 Q110 26 120 28 Q135 26 148 34 Q156 38 156 50"/>
+  <path d="M100 40 Q104 36 108 34" opacity="0.6"/>
+  <path d="M140 35 Q144 33 148 35" opacity="0.6"/>
+
+  <!-- 头 -->
+  <ellipse cx="120" cy="66" rx="22" ry="25"/>
+
+  <!-- 眼睛（都朝上望，思考） -->
+  <path d="M110 58 Q112 56 115 58"/>
+  <path d="M125 58 Q128 56 130 58"/>
+  <circle cx="112.5" cy="60" r="1.4" fill="#a855f7"/>
+  <circle cx="127.5" cy="60" r="1.4" fill="#a855f7"/>
+
+  <!-- 眉毛（挑起，轻微困惑） -->
+  <path d="M107 53 Q112 51 117 52" opacity="0.8"/>
+  <path d="M123 52 Q128 51 133 53" opacity="0.8"/>
+
+  <!-- 鼻 -->
+  <path d="M120 66 L118 74 L122 75"/>
+
+  <!-- 嘴（微微张开，呓语状） -->
+  <path d="M115 82 Q120 84 125 82"/>
+  <path d="M118 82 Q120 83 122 82" opacity="0.4"/>
+
+  <!-- 脖子 -->
+  <path d="M114 89 L114 97 M126 89 L126 97"/>
+
+  <!-- 围巾/领子 -->
+  <path d="M88 104 Q120 96 152 104"/>
+  <path d="M88 104 Q86 110 82 116"/>
+  <path d="M152 104 Q154 110 158 116"/>
+  <path d="M96 100 L98 108 M144 100 L142 108" opacity="0.5"/>
+
+  <!-- 风衣/长外套轮廓 -->
+  <path d="M82 116 Q72 170 76 260"/>
+  <path d="M158 116 Q168 170 164 260"/>
+
+  <!-- 衣襟中缝 -->
+  <path d="M120 115 L120 245" stroke-dasharray="3 6" opacity="0.6"/>
+
+  <!-- 扣子 -->
+  <circle cx="120" cy="135" r="1.5" fill="#a855f7"/>
+  <circle cx="120" cy="165" r="1.5" fill="#a855f7"/>
+  <circle cx="120" cy="195" r="1.5" fill="#a855f7"/>
+  <circle cx="120" cy="225" r="1.5" fill="#a855f7"/>
+
+  <!-- 左手拿本子（笔记/诗稿） -->
+  <path d="M82 148 Q78 162 72 180 Q71 184 76 186 L96 178"/>
+  <rect x="62" y="168" width="26" height="20" rx="1"/>
+  <path d="M66 173 L84 173 M66 178 L82 178 M66 183 L78 183" opacity="0.7"/>
+  <!-- 笔 -->
+  <path d="M84 166 L92 158" stroke-width="2"/>
+  <circle cx="93" cy="157" r="0.8" fill="#a855f7"/>
+
+  <!-- 右手插兜 -->
+  <path d="M158 150 Q162 165 156 176 Q152 178 148 176"/>
+  <path d="M148 168 L146 186" opacity="0.4"/>
+
+  <!-- 下摆飘起（风衣随想法飘动） -->
+  <path d="M76 260 Q72 268 76 278"/>
+  <path d="M164 260 Q168 268 164 278"/>
+  <path d="M120 245 L118 285" opacity="0.5"/>
+
+  <!-- 地面虚线 -->
+  <path d="M50 290 L190 290" stroke-dasharray="3 6" opacity="0.3"/>
+
+  <!-- 左下漂浮气泡（碎念内容） -->
+  <g opacity="0.6">
+    <circle cx="30" cy="200" r="2.5"/>
+    <circle cx="22" cy="215" r="1.5"/>
+    <circle cx="16" cy="228" r="1"/>
+  </g>
+
+  <!-- 标签 -->
+  <text x="120" y="310" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#a855f7" stroke="none" letter-spacing="2">AMLX · 碎碎念诗人</text>
+</svg>
